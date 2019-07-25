@@ -72,7 +72,7 @@ if hostname == "cogrob-lab-03.iem.technion.ac.il":
 		problem = "pddl-instances/rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 		domains[name].append((domain,problem))	
 
-if hostname == "cogrob-lab-01.iem.technion.ac.il":	
+if hostname == "cogrob-lab-02.iem.technion.ac.il":	
 	r = 3
 	name = "rcll-" + str(r) + "-robots"
 	for o in range(1,101):		

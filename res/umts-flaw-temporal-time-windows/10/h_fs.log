@@ -1,0 +1,684 @@
+Warnings encountered when parsing Domain/Problem File
+-----------------------------------------------------
+
+The supplied domain/problem file appear to violate part of the PDDL
+language specification.  Specifically:
+
+Errors: 0, warnings: 13
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 131: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 171: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 193: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 208: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 225: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 259: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 270: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 297: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/domain.pddl: line: 316: Warning: Undeclared requirement :durative-actions 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/instances/instance-11.pddl: line: 288: Warning: Undeclared requirement :timed-initial-literals 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/instances/instance-11.pddl: line: 289: Warning: Undeclared requirement :timed-initial-literals 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/instances/instance-11.pddl: line: 290: Warning: Undeclared requirement :timed-initial-literals 
+pddl-instances/ipc-2004/domains/umts-flaw-temporal-time-windows-strips/instances/instance-11.pddl: line: 291: Warning: Undeclared requirement :timed-initial-literals 
+
+The planner will continue, but you may wish to fix your files accordingly
+Parsing and Instantiating...
+Warning - the variable:
+
+(app-cpu a1 m10)
+
+...was found in a ground precondition/effect, but was never assigned a value
+either in the initial state; or as an effect of an action.  If this was
+deliberate, you may safely ignore this warning.  Otherwise, note that
+following the PDDL semantics:
+
+- Preconditions referring to undefined variables are assumed to be false;
+
+- Actions with effects on variables that have never been given a value are
+  eliminated, as they can never be applied (their outcome would be undefined).
+
+Other such variables may exist, but this warning is only shown for the first.
+
+Warning: zero-duration durative actions
+-------------------------------------------------------------
+At least one durative action in the domain has a duration of
+zero:
+	(am a1 m1 l1)
+This should be rewritten as an instantaneous action (a PDDL
+:action).  The planner will try to do the right thing, and
+internally replace it with an :action, with all the conditions
+and effects changed to being instantaneous.  But, this is not
+guaranteed to be correct, if e.g. you wrote an effect
+(at start (p)) later followed by a condition (at end (p)).
+If it can't solve your problem, rewrite your domain to
+respect the PDDL requirement that durative actions
+need to have a non-zero duration.
+TIL[761.000] @ 0xec4fd0 -> { TIL[70.000]}
+TIL[2151.000] @ 0xeef110 -> { TIL[1430.000]}
+Done
+One way facts...
+Mutex groups...
+Semaphore Facts...
+Envelope Facts...
+One-shot actions...
+(flaw a1 m1 l1 ae) is 1 shot
+(flaw a2 m1 l2 ae) is 1 shot
+(flaw a3 m1 l3 ae) is 1 shot
+(flaw a4 m1 l4 ae) is 1 shot
+(flaw a5 m1 l5 ae) is 1 shot
+(flaw a6 m1 l6 ae) is 1 shot
+(flaw a7 m1 l7 ae) is 1 shot
+(flaw a8 m1 l8 ae) is 1 shot
+(flaw a9 m1 l9 ae) is 1 shot
+(flaw a10 m1 l10 ae) is 1 shot
+Integral variables...
+Variable bounds...
+Static numeric conditions...
+Duration bounds...
+TIL time window analysis...
+Bounding action timestamps due to time windows...
+(begin-init ae) forms a window with range [70.000,761.000]
+Bounds on (aeem a1 m1 l1 ae) (duration [71.000,71.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [141.001,831.999]
+Bounds on (aeem a10 m1 l10 ae) (duration [62.000,62.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [132.001,822.999]
+Bounds on (aeem a2 m1 l2 ae) (duration [61.000,61.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [131.001,821.999]
+Bounds on (aeem a3 m1 l3 ae) (duration [62.000,62.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [132.001,822.999]
+Bounds on (aeem a4 m1 l4 ae) (duration [75.000,75.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [145.001,835.999]
+Bounds on (aeem a5 m1 l5 ae) (duration [71.000,71.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [141.001,831.999]
+Bounds on (aeem a6 m1 l6 ae) (duration [70.000,70.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [140.001,830.999]
+Bounds on (aeem a7 m1 l7 ae) (duration [71.000,71.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [141.001,831.999]
+Bounds on (aeem a8 m1 l8 ae) (duration [71.000,71.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [141.001,831.999]
+Bounds on (aeem a9 m1 l9 ae) (duration [71.000,71.000]):
+	0: [70.001,760.999]
+	1: [70.001,760.999]
+	2: [141.001,831.999]
+(begin-aeei ae) forms a window with range [1430.000,2151.000]
+Bounds on (aeei a1 m1 l1 ae) (duration [49.000,49.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1479.001,2199.999]
+Bounds on (aeei a10 m1 l10 ae) (duration [82.000,82.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1512.001,2232.999]
+Bounds on (aeei a2 m1 l2 ae) (duration [81.000,81.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1511.001,2231.999]
+Bounds on (aeei a3 m1 l3 ae) (duration [82.000,82.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1512.001,2232.999]
+Bounds on (aeei a4 m1 l4 ae) (duration [88.000,88.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1518.001,2238.999]
+Bounds on (aeei a5 m1 l5 ae) (duration [78.000,78.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1508.001,2228.999]
+Bounds on (aeei a6 m1 l6 ae) (duration [44.000,44.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1474.001,2194.999]
+Bounds on (aeei a7 m1 l7 ae) (duration [90.000,90.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1520.001,2240.999]
+Bounds on (aeei a8 m1 l8 ae) (duration [89.000,89.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1519.001,2239.999]
+Bounds on (aeei a9 m1 l9 ae) (duration [81.000,81.000]):
+	0: [1430.001,2150.999]
+	1: [1430.001,2150.999]
+	2: [1511.001,2231.999]
+Dominance constraints (excluding processes and events)...
+Damaging events...
+Dominance constraints (including processes and events)...
+Variable monotonicity...
+Max/min needed values for any single precondition...
+Dependencies from NumericFluents to the conditions and effects that use them...
+Irrelevant action pruning by backward reachability from goal...
+Uninterestingness criteria...
+Compression-safe actions...
+Effect (has-mobile-channels-available) += -2 of action (trm a1 m1 l1) is compression safe
+Effect (has-e-load) += -21 of action (trm a1 m1 l1) is compression safe
+Effect (has-k-available) += -7 of action (trm a1 m1 l1) is compression safe
+Effect (has-d-available) += -50 of action (trm a1 m1 l1) is compression safe
+Effect (has-mobile-cpu) += -81 of action (trm a1 m1 l1) is compression safe
+action (trm a1 m1 l1) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a10 m1 l10) is compression safe
+Effect (has-e-load) += -5 of action (trm a10 m1 l10) is compression safe
+Effect (has-k-available) += -1 of action (trm a10 m1 l10) is compression safe
+Effect (has-d-available) += -5 of action (trm a10 m1 l10) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a10 m1 l10) is compression safe
+action (trm a10 m1 l10) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a2 m1 l2) is compression safe
+Effect (has-e-load) += -29 of action (trm a2 m1 l2) is compression safe
+Effect (has-k-available) += -1 of action (trm a2 m1 l2) is compression safe
+Effect (has-d-available) += -14 of action (trm a2 m1 l2) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a2 m1 l2) is compression safe
+action (trm a2 m1 l2) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -6 of action (trm a3 m1 l3) is compression safe
+Effect (has-e-load) += -20 of action (trm a3 m1 l3) is compression safe
+Effect (has-k-available) += -2 of action (trm a3 m1 l3) is compression safe
+Effect (has-d-available) += -8 of action (trm a3 m1 l3) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a3 m1 l3) is compression safe
+action (trm a3 m1 l3) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a4 m1 l4) is compression safe
+Effect (has-e-load) += -14 of action (trm a4 m1 l4) is compression safe
+Effect (has-k-available) += -2 of action (trm a4 m1 l4) is compression safe
+Effect (has-d-available) += -13 of action (trm a4 m1 l4) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a4 m1 l4) is compression safe
+action (trm a4 m1 l4) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a5 m1 l5) is compression safe
+Effect (has-e-load) += -3 of action (trm a5 m1 l5) is compression safe
+Effect (has-k-available) += -2 of action (trm a5 m1 l5) is compression safe
+Effect (has-d-available) += -7 of action (trm a5 m1 l5) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a5 m1 l5) is compression safe
+action (trm a5 m1 l5) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a6 m1 l6) is compression safe
+Effect (has-e-load) += -18 of action (trm a6 m1 l6) is compression safe
+Effect (has-k-available) += -1 of action (trm a6 m1 l6) is compression safe
+Effect (has-d-available) += -6 of action (trm a6 m1 l6) is compression safe
+Effect (has-mobile-cpu) += -15 of action (trm a6 m1 l6) is compression safe
+action (trm a6 m1 l6) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a7 m1 l7) is compression safe
+Effect (has-e-load) += -7 of action (trm a7 m1 l7) is compression safe
+Effect (has-k-available) += -2 of action (trm a7 m1 l7) is compression safe
+Effect (has-d-available) += -14 of action (trm a7 m1 l7) is compression safe
+Effect (has-mobile-cpu) += -2 of action (trm a7 m1 l7) is compression safe
+action (trm a7 m1 l7) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a8 m1 l8) is compression safe
+Effect (has-e-load) += -6 of action (trm a8 m1 l8) is compression safe
+Effect (has-k-available) += -6 of action (trm a8 m1 l8) is compression safe
+Effect (has-d-available) += -15 of action (trm a8 m1 l8) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a8 m1 l8) is compression safe
+action (trm a8 m1 l8) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a9 m1 l9) is compression safe
+Effect (has-e-load) += -10 of action (trm a9 m1 l9) is compression safe
+Effect (has-k-available) += -1 of action (trm a9 m1 l9) is compression safe
+Effect (has-d-available) += -5 of action (trm a9 m1 l9) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a9 m1 l9) is compression safe
+action (trm a9 m1 l9) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a1 m1 l1) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a1 m1 l1) is compression safe
+action (ct a1 m1 l1) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a10 m1 l10) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a10 m1 l10) is compression safe
+action (ct a10 m1 l10) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a2 m1 l2) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a2 m1 l2) is compression safe
+action (ct a2 m1 l2) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a3 m1 l3) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a3 m1 l3) is compression safe
+action (ct a3 m1 l3) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a4 m1 l4) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a4 m1 l4) is compression safe
+action (ct a4 m1 l4) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a5 m1 l5) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a5 m1 l5) is compression safe
+action (ct a5 m1 l5) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a6 m1 l6) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a6 m1 l6) is compression safe
+action (ct a6 m1 l6) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a7 m1 l7) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a7 m1 l7) is compression safe
+action (ct a7 m1 l7) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a8 m1 l8) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a8 m1 l8) is compression safe
+action (ct a8 m1 l8) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a9 m1 l9) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a9 m1 l9) is compression safe
+action (ct a9 m1 l9) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a1 m1 l1 ae) is compression safe
+action (aeem a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a10 m1 l10 ae) is compression safe
+action (aeem a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a2 m1 l2 ae) is compression safe
+action (aeem a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a3 m1 l3 ae) is compression safe
+action (aeem a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a4 m1 l4 ae) is compression safe
+action (aeem a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a5 m1 l5 ae) is compression safe
+action (aeem a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a6 m1 l6 ae) is compression safe
+action (aeem a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a7 m1 l7 ae) is compression safe
+action (aeem a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a8 m1 l8 ae) is compression safe
+action (aeem a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a9 m1 l9 ae) is compression safe
+action (aeem a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a1 m1 l1 ae) is compression safe
+action (rrc a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+action (rrc a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a2 m1 l2 ae) is compression safe
+action (rrc a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-logical-channels) += -6 of action (rrc a3 m1 l3 ae) is compression safe
+action (rrc a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+action (rrc a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a5 m1 l5 ae) is compression safe
+action (rrc a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a6 m1 l6 ae) is compression safe
+action (rrc a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a7 m1 l7 ae) is compression safe
+action (rrc a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+action (rrc a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+action (rrc a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a1 m1 l1 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a1 m1 l1 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a1 m1 l1 ae) is compression safe
+action (aeei a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a10 m1 l10 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a10 m1 l10 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a10 m1 l10 ae) is compression safe
+action (aeei a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a2 m1 l2 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a2 m1 l2 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a2 m1 l2 ae) is compression safe
+action (aeei a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a3 m1 l3 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a3 m1 l3 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a3 m1 l3 ae) is compression safe
+action (aeei a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a4 m1 l4 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a4 m1 l4 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a4 m1 l4 ae) is compression safe
+action (aeei a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a5 m1 l5 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a5 m1 l5 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a5 m1 l5 ae) is compression safe
+action (aeei a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a6 m1 l6 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a6 m1 l6 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a6 m1 l6 ae) is compression safe
+action (aeei a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a7 m1 l7 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a7 m1 l7 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a7 m1 l7 ae) is compression safe
+action (aeei a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a8 m1 l8 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a8 m1 l8 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a8 m1 l8 ae) is compression safe
+action (aeei a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a9 m1 l9 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a9 m1 l9 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a9 m1 l9 ae) is compression safe
+action (aeei a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a1 m1 l1) is compression safe
+Effect (has-e-load) += -21 of action (trm a1 m1 l1) is compression safe
+Effect (has-k-available) += -7 of action (trm a1 m1 l1) is compression safe
+Effect (has-d-available) += -50 of action (trm a1 m1 l1) is compression safe
+Effect (has-mobile-cpu) += -81 of action (trm a1 m1 l1) is compression safe
+action (trm a1 m1 l1) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a10 m1 l10) is compression safe
+Effect (has-e-load) += -5 of action (trm a10 m1 l10) is compression safe
+Effect (has-k-available) += -1 of action (trm a10 m1 l10) is compression safe
+Effect (has-d-available) += -5 of action (trm a10 m1 l10) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a10 m1 l10) is compression safe
+action (trm a10 m1 l10) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a2 m1 l2) is compression safe
+Effect (has-e-load) += -29 of action (trm a2 m1 l2) is compression safe
+Effect (has-k-available) += -1 of action (trm a2 m1 l2) is compression safe
+Effect (has-d-available) += -14 of action (trm a2 m1 l2) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a2 m1 l2) is compression safe
+action (trm a2 m1 l2) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -6 of action (trm a3 m1 l3) is compression safe
+Effect (has-e-load) += -20 of action (trm a3 m1 l3) is compression safe
+Effect (has-k-available) += -2 of action (trm a3 m1 l3) is compression safe
+Effect (has-d-available) += -8 of action (trm a3 m1 l3) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a3 m1 l3) is compression safe
+action (trm a3 m1 l3) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a4 m1 l4) is compression safe
+Effect (has-e-load) += -14 of action (trm a4 m1 l4) is compression safe
+Effect (has-k-available) += -2 of action (trm a4 m1 l4) is compression safe
+Effect (has-d-available) += -13 of action (trm a4 m1 l4) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a4 m1 l4) is compression safe
+action (trm a4 m1 l4) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a5 m1 l5) is compression safe
+Effect (has-e-load) += -3 of action (trm a5 m1 l5) is compression safe
+Effect (has-k-available) += -2 of action (trm a5 m1 l5) is compression safe
+Effect (has-d-available) += -7 of action (trm a5 m1 l5) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a5 m1 l5) is compression safe
+action (trm a5 m1 l5) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a6 m1 l6) is compression safe
+Effect (has-e-load) += -18 of action (trm a6 m1 l6) is compression safe
+Effect (has-k-available) += -1 of action (trm a6 m1 l6) is compression safe
+Effect (has-d-available) += -6 of action (trm a6 m1 l6) is compression safe
+Effect (has-mobile-cpu) += -15 of action (trm a6 m1 l6) is compression safe
+action (trm a6 m1 l6) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -2 of action (trm a7 m1 l7) is compression safe
+Effect (has-e-load) += -7 of action (trm a7 m1 l7) is compression safe
+Effect (has-k-available) += -2 of action (trm a7 m1 l7) is compression safe
+Effect (has-d-available) += -14 of action (trm a7 m1 l7) is compression safe
+Effect (has-mobile-cpu) += -2 of action (trm a7 m1 l7) is compression safe
+action (trm a7 m1 l7) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a8 m1 l8) is compression safe
+Effect (has-e-load) += -6 of action (trm a8 m1 l8) is compression safe
+Effect (has-k-available) += -6 of action (trm a8 m1 l8) is compression safe
+Effect (has-d-available) += -15 of action (trm a8 m1 l8) is compression safe
+Effect (has-mobile-cpu) += -11 of action (trm a8 m1 l8) is compression safe
+action (trm a8 m1 l8) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-channels-available) += -1 of action (trm a9 m1 l9) is compression safe
+Effect (has-e-load) += -10 of action (trm a9 m1 l9) is compression safe
+Effect (has-k-available) += -1 of action (trm a9 m1 l9) is compression safe
+Effect (has-d-available) += -5 of action (trm a9 m1 l9) is compression safe
+Effect (has-mobile-cpu) += -10 of action (trm a9 m1 l9) is compression safe
+action (trm a9 m1 l9) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a1 m1 l1) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a1 m1 l1) is compression safe
+action (ct a1 m1 l1) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a10 m1 l10) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a10 m1 l10) is compression safe
+action (ct a10 m1 l10) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a2 m1 l2) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a2 m1 l2) is compression safe
+action (ct a2 m1 l2) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a3 m1 l3) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a3 m1 l3) is compression safe
+action (ct a3 m1 l3) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a4 m1 l4) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a4 m1 l4) is compression safe
+action (ct a4 m1 l4) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a5 m1 l5) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a5 m1 l5) is compression safe
+action (ct a5 m1 l5) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a6 m1 l6) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a6 m1 l6) is compression safe
+action (ct a6 m1 l6) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a7 m1 l7) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a7 m1 l7) is compression safe
+action (ct a7 m1 l7) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a8 m1 l8) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a8 m1 l8) is compression safe
+action (ct a8 m1 l8) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-num-calls) += -1 of action (ct a9 m1 l9) is compression safe
+Effect (has-num-mobiles) += -1 of action (ct a9 m1 l9) is compression safe
+action (ct a9 m1 l9) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a1 m1 l1 ae) is compression safe
+action (aeem a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a10 m1 l10 ae) is compression safe
+action (aeem a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a2 m1 l2 ae) is compression safe
+action (aeem a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a3 m1 l3 ae) is compression safe
+action (aeem a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a4 m1 l4 ae) is compression safe
+action (aeem a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a5 m1 l5 ae) is compression safe
+action (aeem a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a6 m1 l6 ae) is compression safe
+action (aeem a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a7 m1 l7 ae) is compression safe
+action (aeem a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a8 m1 l8 ae) is compression safe
+action (aeem a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-mobile-storage) += -10 of action (aeem a9 m1 l9 ae) is compression safe
+action (aeem a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a1 m1 l1 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a1 m1 l1 ae) is compression safe
+action (rrc a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a10 m1 l10 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a10 m1 l10 ae) is compression safe
+action (rrc a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a2 m1 l2 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a2 m1 l2 ae) is compression safe
+action (rrc a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a3 m1 l3 ae) is compression safe
+Effect (has-logical-channels) += -6 of action (rrc a3 m1 l3 ae) is compression safe
+action (rrc a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a4 m1 l4 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a4 m1 l4 ae) is compression safe
+action (rrc a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a5 m1 l5 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a5 m1 l5 ae) is compression safe
+action (rrc a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a6 m1 l6 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a6 m1 l6 ae) is compression safe
+action (rrc a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a7 m1 l7 ae) is compression safe
+Effect (has-logical-channels) += -2 of action (rrc a7 m1 l7 ae) is compression safe
+action (rrc a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a8 m1 l8 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a8 m1 l8 ae) is compression safe
+action (rrc a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-active-set-up) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-handover) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-cell-update) += -2 of action (rrc a9 m1 l9 ae) is compression safe
+Effect (has-logical-channels) += -1 of action (rrc a9 m1 l9 ae) is compression safe
+action (rrc a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a1 m1 l1 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a1 m1 l1 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a1 m1 l1 ae) is compression safe
+action (aeei a1 m1 l1 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a10 m1 l10 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a10 m1 l10 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a10 m1 l10 ae) is compression safe
+action (aeei a10 m1 l10 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a2 m1 l2 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a2 m1 l2 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a2 m1 l2 ae) is compression safe
+action (aeei a2 m1 l2 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a3 m1 l3 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a3 m1 l3 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a3 m1 l3 ae) is compression safe
+action (aeei a3 m1 l3 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a4 m1 l4 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a4 m1 l4 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a4 m1 l4 ae) is compression safe
+action (aeei a4 m1 l4 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a5 m1 l5 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a5 m1 l5 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a5 m1 l5 ae) is compression safe
+action (aeei a5 m1 l5 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a6 m1 l6 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a6 m1 l6 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a6 m1 l6 ae) is compression safe
+action (aeei a6 m1 l6 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a7 m1 l7 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a7 m1 l7 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a7 m1 l7 ae) is compression safe
+action (aeei a7 m1 l7 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a8 m1 l8 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a8 m1 l8 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a8 m1 l8 ae) is compression safe
+action (aeei a8 m1 l8 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Effect (has-max-no-apn) += -1 of action (aeei a9 m1 l9 ae) is compression safe
+Effect (has-max-no-pdp) += -1 of action (aeei a9 m1 l9 ae) is compression safe
+Effect (has-ggsn-bitrate) += -128 of action (aeei a9 m1 l9 ae) is compression safe
+action (aeei a9 m1 l9 ae) has compression safe numeric effects at time 2
+action has compression safe numeric effects but still panicking and setting compression safe to false for now: need a new flag
+Compression-safe invariants...
+31% of durative actions in this problem are compression safe
+Goal Goal [3]
+    (bs-ok a3 m1 l3 ae)
+    (bs-ok a2 m1 l2 ae)
+    (bs-ok a1 m1 l1 ae)
+
+Finishing preprocessing.  Making a TRPG heuristic...
+Making an open list...
+Running WA* search (g weight = 1, h weight = 5)
+{(initiated a1 m1),(initiated a2 m1),(initiated a3 m1),(initiated a4 m1),(initiated a5 m1),(initiated a6 m1),(initiated a7 m1),(initiated a8 m1),(initiated a9 m1),(initiated a10 m1)}
+[ (has-mobile-cpu)=0, (has-d-available)=0, (has-k-available)=0, (has-e-load)=0, (has-mobile-channels-available)=0, (has-num-mobiles)=0, (has-num-calls)=0, (has-mobile-storage)=0, (has-logical-channels)=0, (has-cell-update)=0, (has-handover)=0, (has-active-set-up)=0, (has-ggsn-bitrate)=0, (has-max-no-pdp)=0, (has-max-no-apn)=0 ]
+Initial heuristic = 19
+Initial stats: t=0.01s, 9068kb
+b (18 @ n=2, t=0.01s, 9068kb)b (17 @ n=14, t=0.02s, 9068kb)b (16 @ n=28, t=0.02s, 9068kb)Warning: self overlapping Action 12:1 at 3
+b (15 @ n=43, t=0.03s, 9068kb)b (14 @ n=59, t=0.03s, 9068kb)b (13 @ n=76, t=0.04s, 9068kb)b (12 @ n=104, t=0.04s, 9068kb)dd.{EPS=190.114,ETD=4.04082}xxdxxx.{EPS=215.054,ETD=23.2727}ddd.{EPS=194.049,ETD=20.2483}xdxxdxd.{EPS=197.239,ETD=24.593}xddx.{EPS=191.571,ETD=24}dxxxdxxd.{EPS=194.426,ETD=30.2542}ddxxxdxx.{EPS=196.85,ETD=31.235}xddx.{EPS=195.503,ETD=37.5263}dxxxdxxd.{EPS=197.195,ETD=45.6949}xdxxxdxxd.{EPS=200.562,ETD=53.7695}xdxxxdxx.{EPS=204.082,ETD=63.166}xdxxxdxxdx.{EPS=203.417,ETD=76.916}xxdxxdxx.{EPS=213.584,ETD=106.362}xxdxxx.{EPS=215.424,ETD=160.856}dxxxdxx.{EPS=221.729,ETD=223.02}xxdxxx.{EPS=222.321,ETD=288.12}dxxxxdx.{EPS=222.916,ETD=356.52}xxxdxxx.{EPS=226.86,ETD=427.718}dxxdxxx.{EPS=229.463,ETD=498.394}xdxxxxx.{EPS=228.728,ETD=554.204}xxxxxxx.{EPS=229.148,ETD=595.342}xxxxxxxxx.{EPS=235.183,ETD=618.088}xxdxxx.{EPS=233.536,ETD=611.758}xd.{EPS=230.521,ETD=565.268}xxxxxx.{EPS=234.082,ETD=513.17}dxxxdx.{EPS=234.962,ETD=562.036}xxdxxxd.{EPS=233.973,ETD=618.216}xxxdxxd.{EPS=236.518,ETD=619.97}xx.{EPS=233.318,ETD=554.3}xxxxxxx.{EPS=238.663,ETD=499.822}ddd.{EPS=225.225,ETD=471.606}xddx.{EPS=209.644,ETD=440.066}dxxxdxdxx.{EPS=205.761,ETD=428.06}dxxdd.{EPS=200.965,ETD=444.692}ddxd.{EPS=191.278,ETD=442.48}xxdxxdxxd.{EPS=189.538,ETD=332.68}xxdxd.{EPS=185.048,ETD=242.1}ddxdxx.{EPS=179.083,ETD=171.882}dxxdxxdx.{EPS=178.508,ETD=166.952}xdddx.{EPS=169.319,ETD=197.252}xdxxdxxd.{EPS=174.581,ETD=186.166}xxdxxd.{EPS=176.491,ETD=227.78}dxxdxxdx.{EPS=176.305,ETD=227.544}xdxxdxxd.{EPS=178.827,ETD=252.396}xxdxxdxx.{EPS=183.016,ETD=255.194}dxdxxdxx.{EPS=183.284,ETD=283.328}dxxdxxdxx.{EPS=188.324,ETD=289.22}xdxxdxxdx.{EPS=193.05,ETD=375.45}dd.{EPS=185.667,ETD=391.162}dxdxxdxxx.{EPS=189.322,ETD=365.47}dxxxdxxxdx.{EPS=191.571,ETD=377.44}dxdd.{EPS=186.986,ETD=364.6}xdxxdxxxdx.{EPS=187.899,ETD=367.138}xxdxxdx.{EPS=188.395,ETD=373.416}ddxxdxx.{EPS=185.736,ETD=376.01}xdxxxdxxxdx.{EPS=187.336,ETD=353.272}xddxxxd.{EPS=183.352,ETD=377.262}xxxdxxdxxx.{EPS=183.486,ETD=296.424}dxxdxxxdx.{EPS=190.694,ETD=339.624}xdxxxdxxxdx.{EPS=193.723,ETD=337.832}xdxxdxxxdx.{EPS=194.099,ETD=364.246}xxdxxxdxxd.{EPS=204.918,ETD=411.206}xxxdxxd.{EPS=203.169,ETD=516.222}xddxdx.{EPS=198.728,ETD=480.166}xxdxxxdxxxd.{EPS=204.332,ETD=482.768}xxdxd.{EPS=196.928,ETD=532.818}dxxdxxxxdx.{EPS=201.207,ETD=483.74}xdxxxdxxxd.{EPS=199.442,ETD=547.88}dxxxdxxxd.{EPS=198.807,ETD=496.892}xxdxxxdxx.{EPS=198.098,ETD=556.728}xdxxdxxxdxx.{EPS=196.85,ETD=539.02}xdxxxdxxdx.{EPS=196.002,ETD=506.616}xxdxxxdxxxd.{EPS=200.401,ETD=453.144}xxxdxxxdxx.{EPS=210.084,ETD=510.168}dxxddx.{EPS=201.207,ETD=619.78}xdxxxdxxxd.{EPS=208.247,ETD=574.856}xxdxxxdx.{EPS=204.834,ETD=639.624}dxxdxxdxx.{EPS=205.002,ETD=580.548}xdxxxdxxdx.{EPS=205.339,ETD=661.206}xdxxxdxxxd.{EPS=205.592,ETD=606.506}xxdxxxdxx.{EPS=205.677,ETD=639.884}dxxxdxxdxxx.{EPS=206.954,ETD=653.952}xdxxdxxxdxx.{EPS=205.931,ETD=721.662}xdxdxx.{EPS=198.886,ETD=745.7}dxxxdxxxdxx.{EPS=207.297,ETD=641.158}xdxxdxxxdx.{EPS=205.508,ETD=719.9}xxdxxdxxxdx.{EPS=209.293,ETD=675.762}xxdxxdxxxxd.{EPS=212.585,ETD=709.396}xxdxxxdxxx.{EPS=216.169,ETD=752.382}dxxxxdxxd.{EPS=215.61,ETD=897.952}xxxdxxdxxx.{EPS=215.146,ETD=864.698}dxxdxxxdxx.{EPS=213.584,ETD=863.408}xdxxdxxxdxx.{EPS=213.858,ETD=811.69}xdxxxdxxxd.{EPS=219.684,ETD=914.404}xxxdxxdxxxd.{EPS=220.751,ETD=950.134}xxxdxxxdxx.{EPS=224.115,ETD=960.158}xdxxxdxxdx.{EPS=225.428,ETD=1149.57}xxxxxx.{EPS=222.916,ETD=1505.46}xxxxdxx.{EPS=221.729,ETD=1780.86}xxxxxx.{EPS=222.519,ETD=2030.99}xxxxxxx.{EPS=223.914,ETD=2415.57}xxxxxxxxx.{EPS=229.779,ETD=2767.33}xxxxxxxx.{EPS=230.947,ETD=3102.93}xxxxdxx.{EPS=230.734,ETD=3313.94}xxxxxxxxx.{EPS=233.427,ETD=3673.77}xxxxxxxxxxx.{EPS=242.365,ETD=3978.59}dxdxxd.{EPS=231.267,ETD=4078.83}xdxxdxxdxx.{EPS=229.674,ETD=3912.74}xdxxdxxxdx.{EPS=228.938,ETD=3653.47}xxdxxdxx.{EPS=227.894,ETD=3371.99}xxxx.{EPS=227.583,ETD=3076.11}xxxxdx.{EPS=223.514,ETD=2758.91}xx.{EPS=219.106,ETD=2440.5}xxxxxdxx.{EPS=218.055,ETD=2401.27}dxxxxdxx.{EPS=209.556,ETD=2499.11}xdxxxxd.{EPS=197.394,ETD=2559.9}xxxdxxdxx.{EPS=200.884,ETD=2709.76}xxdxxxdx.{EPS=199.203,ETD=2981.68}xxxdxxd.{EPS=194.628,ETD=3320.27}xxxxdxxx.{EPS=192.53,ETD=3673.53}dxxdxxxd.{EPS=189.681,ETD=4044.78}xxdxxdxx.{EPS=186.706,ETD=4487.78}dxxxdxxx.{EPS=185.736,ETD=4898.55}xdxxxxdxx.{EPS=183.016,ETD=5057.12}xxdxxxxd.{EPS=183.959,ETD=5045.99}xxxxxdxx.{EPS=185.667,ETD=5079.59}xxxdxxxd.{EPS=184.98,ETD=5113.1}xxxxdxxx.{EPS=185.667,ETD=5112.06}xdxxxxdxxx.{EPS=188.608,ETD=5183.19}dxxxdxxxdx.{EPS=191.498,ETD=5215.96}xxdxxxxdx.{EPS=192.901,ETD=5248.12}xxxdxxxx.{EPS=191.718,ETD=5270.83}xdxxxdxx.{EPS=190.694,ETD=5304.64}xxxdxxxx.{EPS=191.791,ETD=5302.06}dxxxxxdxx.{EPS=191.718,ETD=5335.15}xxdxxxdxxx.{EPS=194.024,ETD=5367.94}dxxxxdxxxdx.{EPS=198.02,ETD=5400.15}xxdxxxxx.{EPS=198.413,ETD=5470.5}dxxxxxdx.{EPS=195.771,ETD=5465.36}xxdxxxxdx.{EPS=193.125,ETD=5497.03}xxdxxxxdx.{EPS=191.791,ETD=5529.72}xxxdxxxdx.{EPS=194.024,ETD=5564.54}xxdxxxdxx.{EPS=197.316,ETD=5597.11}xxdxxxxdx.{EPS=196.002,ETD=5627.82}xxxdxxxx.{EPS=196.078,ETD=5658.52}dxxxxdxxx.{EPS=195.16,ETD=5689.41}dxxxdxxxdxx.{EPS=194.477,ETD=5775.25}xxdxxxxd.{EPS=194.477,ETD=5767.16}xxxdxxxxdx.{EPS=196.696,ETD=5784.72}xxdxxxdxx.{EPS=198.491,ETD=5814.73}xdxxxdxxxd.{EPS=199.92,ETD=5900}xxxdxxxdxx.{EPS=199.84,ETD=5888.53}xxdxxdxxx.{EPS=199.601,ETD=5903.46}dxxxdxxdxx.{EPS=203.004,ETD=6044.92}xdxx.{EPS=204.583,ETD=5843.91}xxxxxd.{EPS=205.508,ETD=5484.69}xxdxxdxxxd.{EPS=206.186,ETD=5501.08}xx.{EPS=205.255,ETD=5034.27}xxxxxx.{EPS=209.03,ETD=4658.87}xxx.{EPS=208.507,ETD=4197.6}xxxxxx.{EPS=211.238,ETD=3934.38}xxxdxxxx.{EPS=213.129,ETD=4022.49}xxxxxx.{EPS=215.61,ETD=4039.7}xxx.{EPS=212.495,ETD=3440.43}xxxxxxdxx.{EPS=214.041,ETD=3574.65}xxxxxxx.{EPS=208.943,ETD=3991.07}xxxxxxxxxxx.{EPS=210.97,ETD=3950.1}xxxxxxxxxdxx.{EPS=216.826,ETD=4437.17}xxxxxxx.{EPS=209.82,ETD=4805.22}xxxxxxxxxxx.{EPS=214.316,ETD=5231.21}xxxxxxxxxxxx.{EPS=216.076,ETD=5391.86}xxxxxxx.{EPS=209.732,ETD=5233.09}xdxxxxxxxxxxx.{EPS=213.311,ETD=5123.48}xxxxxxxxx.{EPS=215.796,ETD=5508.31}xxxxxxxxxxxx.{EPS=218.818,ETD=5477.56}xxxxxxxxxxx.{EPS=227.998,ETD=5311.1}xxxxxxxxdxxx.{EPS=227.376,ETD=5154.02}xxxxxxxxxx.{EPS=227.583,ETD=4997.1}xxxxxxxxxxxxxx.{EPS=242.248,ETD=4854.65}xxxxxxxxxxxxx.{EPS=248.016,ETD=4732.32}xxxxxxxxxxxxx.{EPS=254.194,ETD=4613.87}xxxxxxxxxxxx.{EPS=274.725,ETD=4518.2}xxxxxx.{EPS=264.131,ETD=4440.6}xxxxxx.{EPS=264.271,ETD=4365.45}xxxxxxxxxxxx.{EPS=278.087,ETD=4308.4}xxxxxxxxxxx.{EPS=285.225,ETD=4254.96}xxxxxxxxxxxxxxx.{EPS=315.856,ETD=4214.16}dx.{EPS=299.94,ETD=3773.33}dxx.{EPS=279.018,ETD=3342.98}xxxxdxx.{EPS=269.107,ETD=2918.78}xx.{EPS=250.752,ETD=2499.04}xxxxxx.{EPS=243.784,ETD=2080.98}xxxxx.{EPS=244.978,ETD=1665.38}xxxxx.{EPS=245.459,ETD=1252.93}xx.{EPS=226.142,ETD=846.36}xxxx.{EPS=217.77,ETD=445.69}xxxxdx.{EPS=201.045,ETD=47.108}xxxxx.{EPS=205.339,ETD=55.488}xxx.{EPS=206.612,ETD=62.064}xxx.{EPS=203.583,ETD=81.79}xxx.{EPS=203.749,ETD=80.73}xxxxxx.{EPS=203.169,ETD=78.602}xxxxdx.{EPS=203.087,ETD=76.244}xxxx.{EPS=203.252,ETD=75.028}xxx.{EPS=202.758,ETD=71.446}xxxxx.{EPS=203.169,ETD=165.812}xxxxxx.{EPS=204.332,ETD=259.81}xxxxxx.{EPS=203.749,ETD=354.792}xxx.{EPS=199.521,ETD=472.332}xxxxxxxxxx.{EPS=205.846,ETD=576.236}xdx.{EPS=203.169,ETD=701.632}xxxxxx.{EPS=198.491,ETD=804.934}xxxxxxx.{EPS=199.601,ETD=928.648}xxx.{EPS=193.424,ETD=1031.39}xxxxxxxxxx.{EPS=201.939,ETD=1155.62}xxxd.{EPS=195.008,ETD=1116.89}xxx.{EPS=187.406,ETD=1100.35}xxxxxxxxx.{EPS=189.538,ETD=1105.23}xxxx.{EPS=191.791,ETD=1067.62}xxx.{EPS=181.422,ETD=1007.87}xxxxx.{EPS=182.682,ETD=991.776}xxxxxxxx.{EPS=186.637,ETD=996.67}xxx.{EPS=179.662,ETD=936.028}xxx.{EPS=179.083,ETD=918.818}xxxxxxxxxx.{EPS=178.699,ETD=924.702}xxx.{EPS=178.508,ETD=927.614}xxx.{EPS=178.063,ETD=908.988}xxx.{EPS=170.999,ETD=868.674}xxxxxxxxxx.{EPS=177.368,ETD=895.332}xxx.{EPS=177.683,ETD=921.118}xxx.{EPS=175.809,ETD=857.3}xxxxxx.{EPS=173.671,ETD=839.234}xxxxxdx.{EPS=178.253,ETD=888.438}xxx.{EPS=177.683,ETD=869.006}xxx.{EPS=168.634,ETD=804.952}xxxxxx.{EPS=171.35,ETD=807.978}xxxxxxxxxxxxxxx.{EPS=186.637,ETD=857.904}xxxxxxxxxxxxxxx.{EPS=205.086,ETD=884.378}xxxxxxxxxxxxxxx.{EPS=213.038,ETD=865.53}xxxxxx.{EPS=224.215,ETD=1083.76}xxxxd.{EPS=230.203,ETD=1586.35}xxxdxxx.{EPS=221.926,ETD=2690.39}xdxxdxxx.{EPS=215.239,ETD=3775.03}dxxxxdx.{EPS=216.638,ETD=4909.72}xdxxxdxx.{EPS=217.77,ETD=6048.01}dxxxdxx.{EPS=212.224,ETD=7190.12}xxdxxdx.{EPS=192.456,ETD=8289.03}xxdxxdxxdx.{EPS=178.444,ETD=9317.36}xdxxdxxdx.{EPS=165.837,ETD=10250.8}dxxxdxx.{EPS=160.205,ETD=11070.7}xxxdxxx.{EPS=157.332,ETD=11753.6}xxdxxxxd.{EPS=157.183,ETD=11792.9}xxxxdxx.{EPS=156.887,ETD=11832.1}xxdxxxx.{EPS=156.789,ETD=11871.4}xdxxxdxxxxd.{EPS=158.479,ETD=11835.7}xxdxxxdxx.{EPS=161.186,ETD=11749.1}xdxxxdxxx.{EPS=164.096,ETD=11586}dxxxxxdx.{EPS=162.285,ETD=11720.9}xxxxdxx.{EPS=161.082,ETD=11954.4}xxxdxxx.{EPS=160.154,ETD=12090.7}xxdxxxdxxx.{EPS=161.76,ETD=12078.2}dxxxxdxxxdx.{EPS=164.745,ETD=11937.5}xxdxxxdxx.{EPS=166.611,ETD=11795.4}xxdxxxx.{EPS=165.728,ETD=11831.3}dxxxxxdx.{EPS=163.185,ETD=11942.4}xxxdxxxdx.{EPS=162.232,ETD=12052.6}xdxxxxdxxd.{EPS=161.655,ETD=12135.2}xxxdxxxdxx.{EPS=163.613,ETD=11964.6}xxdxxxx.{EPS=163.239,ETD=12000.4}xxdxxxdxx.{EPS=163.452,ETD=12036.1}xdxxxdxxxxd.{EPS=164.366,ETD=11913.3}xxdxxxxdxx.{EPS=163.239,ETD=11917}xdxxxdxx.{EPS=161.342,ETD=12130.8}xxdxxxdxxd.{EPS=163.292,ETD=11955.4}xxxdxxxdxx.{EPS=166.058,ETD=11778.6}dxxxxdxxxdx.{EPS=166.5,ETD=11704.3}xdxxxdxxx.{EPS=166.223,ETD=11732.9}dxxdxxxdxx.{EPS=166.722,ETD=11627.4}xdxxdxxdxx.{EPS=169.319,ETD=11180.1}xxdxxx.{EPS=171.703,ETD=10622.8}dxxxdxxx.{EPS=171.116,ETD=10606.5}xxxdx.{EPS=171.233,ETD=10158.6}xxxxxx.{EPS=172.771,ETD=9500.04}xxxx.{EPS=172.058,ETD=8398.74}xxxx.{EPS=170.242,ETD=7300.13}xxxxxxx.{EPS=171.174,ETD=6148.68}xxxxx.{EPS=171.527,ETD=5093.18}xxxxdxxx.{EPS=172.058,ETD=4297.2}xxxx.{EPS=168.067,ETD=3633.23}xxxxxx.{EPS=167.954,ETD=3075.88}xxxx.{EPS=163.881,ETD=2183.67}xxxxxx.{EPS=164.042,ETD=1721.16}xxx.{EPS=160.102,ETD=1230.64}xxxxxxx.{EPS=162.338,ETD=1444.42}xxx.{EPS=159.134,ETD=1572.09}xxxxxxx.{EPS=159.134,ETD=1780.07}xxx.{EPS=155.28,ETD=1780.22}xxxxxxx.{EPS=155.666,ETD=1814.48}xdxx.{EPS=154.416,ETD=1766.02}xxxxxx.{EPS=152.812,ETD=1717.52}xxxxxxxxxxxxxx.{EPS=165.235,ETD=1751.96}xxxxxxxxxxxxx.{EPS=174.642,ETD=1786.63}xx.{EPS=177.117,ETD=1848.17}xxxxxx.{EPS=176.929,ETD=1911.86}xxxxxx.{EPS=184.706,ETD=2029.11}dxd.{EPS=175.316,ETD=1980.17}xxxdxxxxx.{EPS=181.884,ETD=2125.8}xxxxxx.{EPS=179.019,ETD=2133.34}xxx.{EPS=183.217,ETD=2251.99}xxxxdx.{EPS=184.706,ETD=2428.27}xxxxxxx.{EPS=173.974,ETD=2464.51}xxx.{EPS=160.411,ETD=2471.89}xxxxxxx.{EPS=163.773,ETD=2566.2}xxxxxxx.{EPS=163.506,ETD=2546.71}xdx.{EPS=156.104,ETD=2526.01}dxxxxxdxx.{EPS=163.239,ETD=2560.91}xxd.{EPS=156.055,ETD=2539.74}xxxdxxxxx.{EPS=158.078,ETD=2576.6}xdxx.{EPS=154.895,ETD=2496.65}xxdxxxx.{EPS=155.376,ETD=2477.28}xdxxxxxx.{EPS=153.941,ETD=2396.61}xdxx.{EPS=154.607,ETD=2463.26}xxxxxxdxx.{EPS=154.607,ETD=2383.79}xxxxx.{EPS=151.837,ETD=2391.69}xxdxxxxxxxxxx.{EPS=165.289,ETD=2368.86}xdxb (11 @ n=211758, t=84.14s, 1088696kb)b (10 @ n=211770, t=84.14s, 1088696kb)b (9 @ n=211777, t=84.15s, 1088836kb)b (8 @ n=211791, t=84.16s, 1088836kb)xxdxx.{EPS=155.958,ETD=2403.27}xdxxxxxxxd.{EPS=156.691,ETD=2172.69}xdxdx.{EPS=140.095,ETD=1909.09}xdxxd.{EPS=132.066,ETD=1733.8}xxxdxd.{EPS=121.477,ETD=1442.89}xxdxx.{EPS=113.122,ETD=1267.26}dxxxxdx.{EPS=107.573,ETD=977.696}dxxdxxx.{EPS=101.092,ETD=743.542}xxxdxxxxd.{EPS=99.2063,ETD=505.654}xxxxxxdxxxx.{EPS=93.633,ETD=337.05}xxxxdxxxxx.{EPS=94.3574,ETD=143.25}xxxxdxxxxxxx.{EPS=94.1265,ETD=185.65}xxxxxxxxxdxx.{EPS=98.8533,ETD=212.184}xxxxdxxxxxx.{EPS=103.37,ETD=252.914}dxxxxxxxdx.{EPS=107.945,ETD=317.59}xxxxxxxdxx.{EPS=112.562,ETD=388.606}xxxdxd.{EPS=109.89,ETD=400.638}xdx.{EPS=105.086,ETD=400.006}dxxdx.{EPS=97.9624,ETD=374.618}dxxxdxx.{EPS=94.2152,ETD=335.742}xdxxxdx.{EPS=89.1424,ETD=312.87}dxdx.{EPS=83.4028,ETD=271.418}dxxxdxx.{EPS=79.2519,ETD=250.822}xdxxxxdx.{EPS=75.7691,ETD=234.584}dxdx.{EPS=71.2454,ETD=170.352}xdxxxdx.{EPS=68.2408,ETD=104.658}xdxxxxd.{EPS=67.9625,ETD=116.572}xdxxxd.{EPS=68.018,ETD=120.82}xxxdxxxd.{EPS=69.0512,ETD=139.044}xxxdxx.{EPS=67.7599,ETD=157.986}dxxxdxxxx.{EPS=68.2221,ETD=174.858}xxdxxdx.{EPS=68.6813,ETD=181.986}xxxdxxxdxx.{EPS=69.0799,ETD=210.04}xdxxxxd.{EPS=68.0457,ETD=217.01}xdxdx.{EPS=66.7913,ETD=218.62}xdxxd.{EPS=65.2742,ETD=221.074}xxxxdxxxxdx.{EPS=65.7808,ETD=216.19}xxdx.{EPS=64.4247,ETD=228.208}dxdxxx.{EPS=62.7904,ETD=215.022}dxxxxdxxxx.{EPS=63.589,ETD=232.85}xdxdx.{EPS=60.9979,ETD=208.434}xdxxxxdxx.{EPS=60.8273,ETD=208.296}xxxdxxxd.{EPS=59.4813,ETD=226.122}xxxdxxxxdx.{EPS=59.609,ETD=205.174}xxxxxdxxxx.{EPS=61.4251,ETD=265.066}dxxxxdxxxx.{EPS=62.7117,ETD=295.38}xdxxxxdxxxxx.{EPS=62.7589,ETD=322.218}dxxd.{EPS=61.4477,ETD=310.994}xdxxdxx.{EPS=60.8939,ETD=313.42}xxdxxxdxxx.{EPS=60.1251,ETD=335.27}xdxd.{EPS=59.2909,ETD=325.628}xxxdxxxxdx.{EPS=58.7613,ETD=328.05}xxxxdxxd.{EPS=58.1801,ETD=348.53}xxxxdxxxx.{EPS=57.5639,ETD=341.842}dxxxxxxdxxx.{EPS=57.0646,ETD=355.53}xdxxxxdxxx.{EPS=56.7537,ETD=363.698}xxdxxxxdxxx.{EPS=56.427,ETD=392.988}xxxxxxxxxx.{EPS=60.1251,ETD=623.818}xxxxxxxxxxx.{EPS=63.3794,ETD=848.018}xxxdxdx.{EPS=62.383,ETD=999.42}dxxd.{EPS=62.9485,ETD=1179.29}xdxxdx.{EPS=61.6447,ETD=1325.08}xdxxdx.{EPS=61.1471,ETD=1385.71}xxdxxdxx.{EPS=61.1621,ETD=1489.55}xxxdxxdx.{EPS=60.6061,ETD=1492.02}xdxxxxdxx.{EPS=60.8199,ETD=1510.98}xxxxdxxxxx.{EPS=61.6523,ETD=1718.04}xxdxxxxxxxd.{EPS=59.73,ETD=1754.27}xxxxxxxdxxxx.{EPS=58.0114,ETD=1796.45}xxxxdxxxxxx.{EPS=58.5617,ETD=1819.39}dxxxxxxxxdxxx.{EPS=60.3938,ETD=1968.31}xxxxdxxxxxx.{EPS=61.6751,ETD=2043.41}xxdxxxxxxdx.{EPS=62.7038,ETD=2202.16}xxxxxxxdxxxx.{EPS=63.4115,ETD=2389.54}xxxxdxxxxxd.{EPS=63.3874,ETD=2549.3}xxxxxxxxdxxx.{EPS=62.9802,ETD=2813.52}xxxxxdxxxxx.{EPS=60.7977,ETD=2801.26}xxdxxxxdxxx.{EPS=60.7165,ETD=2797.87}xxxxdxxxxxxx.{EPS=60.3865,ETD=2822.96}xdxxxxxxxxxdx.{EPS=60.3938,ETD=2888.34}xxxxxxxxdxxx.{EPS=60.3427,ETD=2873.19}xxxxxxdxxxxx.{EPS=60.3792,ETD=2960.82}xxxxdxxxxxxx.{EPS=60.9459,ETD=2931.99}dxxxxxxxxxxdx.{EPS=60.6649,ETD=2964.09}xxxxxxdxxxxx.{EPS=60.7829,ETD=3054.19}xxxxxxdxxxxxx.{EPS=60.7091,ETD=3034.08}xdxxxxxxxxdxx.{EPS=61.4553,ETD=3071.32}xxxxdxxxxxxx.{EPS=61.8965,ETD=3124.56}xxdxxxxxxxxdx.{EPS=61.6219,ETD=3098.86}xxxxxxxdxxxx.{EPS=61.546,ETD=3179.09}xxxxxdxxxxxx.{EPS=61.1845,ETD=3178.74}xxxdxxxxxxxx.{EPS=60.9905,ETD=3210.78}xdxxxxxxxxdx.{EPS=60.4814,ETD=3305.43}xxxxxxxdxxxxx.{EPS=60.0312,ETD=3269.51}xxdxxxxxxxxdx.{EPS=60.7829,ETD=3292.79}xxxxxdxxxxxx.{EPS=61.2895,ETD=3352.07}xdxxxxxxxxxx.{EPS=63.1393,ETD=3385.14}xxxxxxxxxxx.{EPS=63.1632,ETD=3460.41}xxxxxxxxxxdxxx.{EPS=64.2013,ETD=3547.47}xxxxxxxxxxxx.{EPS=64.8508,ETD=3510.12}xxxxxxxxxxxxxx.{EPS=66.2427,ETD=3517.34}xxxxxxxxxxxxx.{EPS=66.8807,ETD=3459.69}xxdxxxxxxxxxxx.{EPS=68.4932,ETD=3382.69}xxxxxxxxxxxxx.{EPS=69.4927,ETD=3348.14}xxxxxxxxxxxxx.{EPS=70.7914,ETD=3234.41}xxdxdxx.{EPS=67.1592,ETD=3084.52}xdxxxxx.{EPS=63.597,ETD=2866.01}dxxdx.{EPS=59.1366,ETD=2465.55}xdxxxxdxxx.{EPS=57.6967,ETD=2105.49}xxxxdxxxxxx.{EPS=57.4185,ETD=1772.67}xxxdx.{EPS=54.1653,ETD=1469.53}dxxxxxdxx.{EPS=52.9493,ETD=1176.37}xxxxxdxxxx.{EPS=51.8457,ETD=904.94}xxxxxdxx.{EPS=50.2109,ETD=670.784}xdxxxxxdxx.{EPS=48.7424,ETD=432.926}xxxxxxxxdxx.{EPS=50.3829,ETD=243.21}xxxxxxxx.{EPS=50.4032,ETD=195.178}xxxxxxx.{EPS=52.4604,ETD=276.576}xxxxxxxxd.{EPS=52.0508,ETD=329.62}xxxxxxxx.{EPS=51.1561,ETD=401.938}xxxxxxxx.{EPS=52.1921,ETD=427.554}xxxxdxxdx.{EPS=52.0075,ETD=472.214}xdxxxxxdx.{EPS=51.5092,ETD=463.89}xxxxxdxxxxx.{EPS=53.2595,ETD=448.52}xxxxxxdxd.{EPS=52.9717,ETD=458.122}xxxxdxxxx.{EPS=52.3615,ETD=430.776}xxdxxxxxxxxxxx.{EPS=54.6269,ETD=405.52}xxxxxdxxxxxx.{EPS=55.2669,ETD=876.618}xxdxxxxxxxdx.{EPS=55.6359,ETD=1450.19}xxxxxxxdxxx.{EPS=55.8659,ETD=2003.4}xxxxxdxxxxxx.{EPS=56.3507,ETD=2596.37}xdxxxxxxxx.{EPS=56.7601,ETD=3192.68}dxxxxxxxdxxx.{EPS=56.8376,ETD=3840.35}xxxxxdxxxxx.{EPS=55.3649,ETD=4484.76}xxxdxxxxxxxd.{EPS=55.4139,ETD=5128.47}xxxxxxxxdxx.{EPS=54.9934,ETD=5785.99}xxxxxdxxxxx.{EPS=52.6648,ETD=6395.77}xxdxxxxxxxdxx.{EPS=52.1812,ETD=6512.5}xxxxxxxdxx.{EPS=51.9049,ETD=6554.05}xxxdxxxxxxdx.{EPS=51.9534,ETD=6595.67}xxxxxxxdxxx.{EPS=52.0562,ETD=6635.96}xxxxxxdxxxxx.{EPS=52.04,ETD=6676.8}xxxxxxdxxxx.{EPS=52.0183,ETD=6716.79}xxxxxdxxxxxx.{EPS=52.2411,ETD=6757.55}xx

@@ -8,7 +8,11 @@ generated=`grep "Nodes Generated: [0-9]*" $1 | awk '{print $4;}'`
 expanded=`grep "Nodes Expanded: [0-9]*" $1 | awk '{print $4;}'`
 evaluated=`grep  "Nodes Evaluated: [0-9]*" $1 | awk '{print $4;}'`
 makespan=`tail -1 $1 | awk '{print $1 + substr($(NF-2),2);}'`
+metareasoning_time=`grep "Metareasoning time (not discounted): [0-9]*" $1 | awk '{print $6;}'`
+disc_time=`grep "Discounted time: [0-9]*" $1 | awk '{print $4;}'`
 
-echo $1,$solved,$unsolvable,$stime,$generated,$expanded,$evaluated,$makespan
+
+
+echo $1,$solved,$unsolvable,$stime,$generated,$expanded,$evaluated,$makespan,$metareasoning_time,$disc_time
 
 

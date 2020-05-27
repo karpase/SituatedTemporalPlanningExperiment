@@ -7,6 +7,7 @@ from smac.configspace import ConfigurationSpace
 from smac.facade.hyperband_facade import HB4AC
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
+import sys
 
 import subprocess
 from sklearn.model_selection import KFold 
@@ -15,7 +16,7 @@ logger = logging.getLogger("situated-temporal-planning-smac")
 logging.basicConfig(level=logging.INFO)
 
 
-
+GAT_UNSOLVED = 100000
 
 def generate_instances():
 	domains = defaultdict(list)
@@ -62,6 +63,8 @@ def generate_instances():
 		problem = "../pddl-instances/ipc-2006/domains/trucks-time-constraints-timed-initial-literals/instances/instance-" + str(x) + ".pddl"
 		domains[name].append((domain,problem))	
 
+	domains = defaultdict(list)
+
 	for r in range(1,3):
 		name = "rcll-" + str(r) + "-robots"
 		for o in range(1,101):		
@@ -79,6 +82,7 @@ for d in domains:
 
 
 train_folds = []
+test_folds = []
 def generate_folds():
 	for d in domains:
 		kf = KFold(n_splits=10, shuffle=True)
@@ -96,6 +100,7 @@ def generate_folds():
 			for t in test_index:
 				f.write(domains[d][np.asscalar(t)][1] + "\n")
 			f.close()
+			test_folds.append(test_filename)
 
 generate_folds()
 
@@ -128,7 +133,11 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
    
     #print("inst", instance)
 
-    l = ["../rewrite-no-lp", 
+
+    if cfg == "baseline":
+        l = ["../rewrite-no-lp", "--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+    else:   
+        l = ["../rewrite-no-lp", 
                     "--include-metareasoning-time",
                     "--forbid-self-overlapping-actions",
                     "--deadline-aware-open-list", "IJCAI",
@@ -138,7 +147,7 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
                     "--ijcai-gamma", str(cfg["gamma"]),        
                     "--min-probability-failure", str(cfg["min_pf"]),
                     domfile_by_probfile[instance], instance]
-    print(l)
+    #print(l)
     sr = subprocess.check_output(l)
     str_output = sr.decode("utf-8")   
     if str_output.find("Solution Found") > -1:
@@ -150,11 +159,11 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
         dur = words[-3]
         #print("solved2", start_time, dur)
         gat = float(start_time[:-2]) + float(dur[1:-2])
-        print("solved, gat=",gat)
+        #print("solved, gat=",gat)
         return gat
 
-    print("no solution found")
-    return 10000
+    #print("no solution found")
+    return GAT_UNSOLVED
 
 
 # Build Configuration Space which defines all parameters and their ranges.
@@ -173,21 +182,27 @@ min_pf = UniformFloatHyperparameter("min_pf", 0.0001, 0.1, default_value=0.01, l
 cs.add_hyperparameters([t_u, gamma, r, min_pf])
 
 
-for instance_file in train_folds:
-	print("Finding best configuration for: ", instance_file)
+
+
+	
+
+results_f = open("results.summary.txt", "a")
+
+for instance_file, test_file in zip(train_folds, test_folds):
+	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 300,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 7200,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": "true",
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
                      # Alternatively, you can also disable this.
                      # Then you should handle runtime and memory yourself in the TA
-                     "cutoff": 30,  # runtime limit for target algorithm
+                     "cutoff": 60,  # runtime limit for target algorithm
                      "memory_limit": 3072,  # adat this to reasonable value for your hardware
                      #"instances": instances
-                     "instance_file": instance_file
-                     #"test_insts": "test-instances-rcll-r1.txt"
+                     "instance_file": instance_file#,
+                     #"test_insts": test_file
                      })
 
 	# To optimize, we pass the function to the SMAC-object
@@ -207,8 +222,27 @@ for instance_file in train_folds:
 	finally:
 	    incumbent = smac.solver.incumbent
 
-	#inc_value = smac.get_tae_runner().run(config=incumbent, seed=0)[1]
-	#print("Optimized Value: %.4f" % inc_value)
+	
 
+	solved_baseline = 0
+	solved_incumbent = 0
+	f = open(test_file, "r")
+	for line in f.read().splitlines():
+		#print(line)
+		gatb = smac.get_tae_runner().run(config="baseline", seed=0, instance=line, cutoff=200)[1]
+		if gatb < GAT_UNSOLVED:
+			solved_baseline = solved_baseline + 1
+		gatc = smac.get_tae_runner().run(config=incumbent, seed=0, instance=line, cutoff=200)[1]
+		if gatc < GAT_UNSOLVED:
+			solved_incumbent = solved_incumbent + 1
+	f.close()
+
+	print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_incumbent) + "\n")
+
+	results_f.write(instance_file + ", " + str(solved_baseline) + ", "+  str(solved_incumbent) + "\n")
+	results_f.flush()
+	#sys.exit(0)
+
+results_f.close()
 
 

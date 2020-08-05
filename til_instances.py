@@ -90,7 +90,7 @@ for d in domains:
 	for (i,(dom,prob)) in enumerate(domains[d]):
 		assert(os.path.isfile(dom))
 		assert(os.path.isfile(prob))
-                os.makedirs("res/" + d + "/" + str(i))
+		os.makedirs("res/" + d + "/" + str(i))
 		for cname,c in configurations:  
 			print("(ulimit -t 200; " + c + " " + dom + " " + prob + " >& res/" + d + "/" + str(i) + "/" + cname + ".log)")
 

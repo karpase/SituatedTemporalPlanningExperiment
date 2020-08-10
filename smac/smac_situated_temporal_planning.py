@@ -6,6 +6,7 @@ from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatH
 from smac.configspace import ConfigurationSpace
 from smac.facade.hyperband_facade import HB4AC
 from smac.facade.smac_hpo_facade import SMAC4HPO
+from smac.facade.smac_bohb_facade import BOHB4HPO
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 import sys
@@ -88,11 +89,11 @@ for d in domains:
 
 train_folds = []
 test_folds = []
-def generate_folds():
+def read_folds():
 	for d in domains:
 		#kf = KFold(n_splits=10, shuffle=True)
 
-		for i in range(10):
+		for i in range(2):
 #		for i, (train_index, test_index) in enumerate(kf.split(domains[d])):
 			train_filename = "folds/" + d + "_fold_" + str(i) + "_train.txt"		
 			#f = open(train_filename,"w")
@@ -128,8 +129,8 @@ def generate_zipper_folds():
                         f.close()
                         test_folds.append(test_filename)
 
-generate_zipper_folds()
-
+#generate_zipper_folds()
+read_folds()
 
 
 
@@ -201,10 +202,10 @@ cs = ConfigurationSpace()
 
 # Parameters for improved greedy metareasoning scheme
 t_u = UniformIntegerHyperparameter("t_u", 1, 1000, default_value=100, log=True)
-gamma = UniformFloatHyperparameter("gamma", 0.01, 100, default_value=1, log=True)
+gamma = UniformFloatHyperparameter("gamma", 0.01, 1000, default_value=10, log=True)
 r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
-min_pf = UniformFloatHyperparameter("min_pf", 0.0001, 0.1, default_value=0.01, log=True)
-nexp = UniformIntegerHyperparameter("nexp", 1, 10000, default_value=100, log=True)
+min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
+nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=100, log=True)
 
 
 cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
@@ -221,7 +222,7 @@ def run_fold(inp):
 	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 86400,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 7200,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": "true",
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
@@ -235,7 +236,7 @@ def run_fold(inp):
                      })
 
 	# To optimize, we pass the function to the SMAC-object
-	smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(421),
+	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
              tae_runner=run_situated_temporal_planner)#,
              #intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 

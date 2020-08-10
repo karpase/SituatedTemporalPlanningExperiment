@@ -5,18 +5,21 @@ import numpy as np
 from ConfigSpace.hyperparameters import CategoricalHyperparameter, UniformFloatHyperparameter, UniformIntegerHyperparameter
 from smac.configspace import ConfigurationSpace
 from smac.facade.hyperband_facade import HB4AC
+from smac.facade.smac_hpo_facade import SMAC4HPO
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 import sys
 
 import subprocess
 from sklearn.model_selection import KFold 
+from multiprocessing import Pool
+
 
 logger = logging.getLogger("situated-temporal-planning-smac")
 logging.basicConfig(level=logging.INFO)
 
 
-GAT_UNSOLVED = 100000
+GAT_UNSOLVED = 1000000000
 
 def generate_instances():
 	domains = defaultdict(list)
@@ -33,17 +36,6 @@ def generate_instances():
 		problem = "../pddl-instances/ipc-2004/domains/pipesworld-no-tankage-temporal-deadlines-strips/instances/instance-" + str(x) + ".pddl"
 		domains[name].append((domain,problem))
 
-	name = "satellite-complex-time-windows"
-	for x in range(1,37): 
-		domain = "../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/domain.pddl"
-		problem = "../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/instances/instance-" + str(x) + ".pddl"
-		domains[name].append((domain,problem))
-
-	name = "satellite-time-time-windows"	
-	for x in range(1,37): 
-		domain = "../pddl-instances/ipc-2004/domains/satellite-time-time-windows-strips/domain.pddl"
-		problem = "../pddl-instances/ipc-2004/domains/satellite-time-time-windows-strips/instances/instance-" + str(x) + ".pddl"
-		domains[name].append((domain,problem))
 
 	name = "umts-flaw-temporal-time-windows"	
 	for x in range(1,51): 
@@ -63,7 +55,20 @@ def generate_instances():
 		problem = "../pddl-instances/ipc-2006/domains/trucks-time-constraints-timed-initial-literals/instances/instance-" + str(x) + ".pddl"
 		domains[name].append((domain,problem))	
 
-	domains = defaultdict(list)
+	name = "satellite-complex-time-windows"
+	for x in range(1,37): 
+		domain = "../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/domain.pddl"
+		problem = "../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/instances/instance-" + str(x) + ".pddl"
+		domains[name].append((domain,problem))
+
+	name = "satellite-time-time-windows"	
+	for x in range(1,37): 
+		domain = "../pddl-instances/ipc-2004/domains/satellite-time-time-windows-strips/domain.pddl"
+		problem = "../pddl-instances/ipc-2004/domains/satellite-time-time-windows-strips/instances/instance-" + str(x) + ".pddl"
+		domains[name].append((domain,problem))
+
+
+	#domains = defaultdict(list)
 
 	for r in range(1,3):
 		name = "rcll-" + str(r) + "-robots"
@@ -85,24 +90,45 @@ train_folds = []
 test_folds = []
 def generate_folds():
 	for d in domains:
-		kf = KFold(n_splits=10, shuffle=True)
+		#kf = KFold(n_splits=10, shuffle=True)
 
-		for i, (train_index, test_index) in enumerate(kf.split(domains[d])):
+		for i in range(10):
+#		for i, (train_index, test_index) in enumerate(kf.split(domains[d])):
 			train_filename = "folds/" + d + "_fold_" + str(i) + "_train.txt"		
-			f = open(train_filename,"w")
-			for t in train_index:
-				f.write(domains[d][np.asscalar(t)][1] + "\n")
-			f.close()
+			#f = open(train_filename,"w")
+			#for t in train_index:
+			#	f.write(domains[d][np.asscalar(t)][1] + "\n")
+			#f.close()
 			train_folds.append(train_filename)
 
 			test_filename = "folds/" + d + "_fold_" + str(i) + "_test.txt"
-			f = open(test_filename,"w")
-			for t in test_index:
-				f.write(domains[d][np.asscalar(t)][1] + "\n")
-			f.close()
+			#f = open(test_filename,"w")
+			#for t in test_index:
+			#	f.write(domains[d][np.asscalar(t)][1] + "\n")
+			#f.close()
 			test_folds.append(test_filename)
 
-generate_folds()
+
+def generate_zipper_folds():
+        for d in domains:
+                split = [domains[d][0::2], domains[d][1::2]]
+
+                for i in range(2):
+                        train_filename = "folds/" + d + "_fold_" + str(i) + "_train.txt"
+                        f = open(train_filename,"w")
+                        for t in split[i]:
+                                f.write(t[1] + "\n")
+                        f.close()
+                        train_folds.append(train_filename)
+
+                        test_filename = "folds/" + d + "_fold_" + str(i) + "_test.txt"
+                        f = open(test_filename,"w")
+                        for t in split[1-i]:
+                                f.write(t[1] + "\n")
+                        f.close()
+                        test_folds.append(test_filename)
+
+generate_zipper_folds()
 
 
 
@@ -145,6 +171,7 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
                     "--slack-from-heuristic",
                     "--ijcai-t_u", str(cfg["t_u"]),         
                     "--ijcai-gamma", str(cfg["gamma"]),        
+                    "--icaps-for-n-expansions", str(cfg["nexp"]),
                     "--min-probability-failure", str(cfg["min_pf"]),
                     domfile_by_probfile[instance], instance]
     #print(l)
@@ -173,40 +200,42 @@ cs = ConfigurationSpace()
 
 
 # Parameters for improved greedy metareasoning scheme
-t_u = UniformFloatHyperparameter("t_u", 10, 1000, default_value=100, log=True)
+t_u = UniformIntegerHyperparameter("t_u", 1, 1000, default_value=100, log=True)
 gamma = UniformFloatHyperparameter("gamma", 0.01, 100, default_value=1, log=True)
-r = UniformFloatHyperparameter("r", 10, 1000, default_value=100, log=True)
+r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
 min_pf = UniformFloatHyperparameter("min_pf", 0.0001, 0.1, default_value=0.01, log=True)
+nexp = UniformIntegerHyperparameter("nexp", 1, 10000, default_value=100, log=True)
 
 
-cs.add_hyperparameters([t_u, gamma, r, min_pf])
+cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
 
 
 
 
-	
 
-results_f = open("results.summary.txt", "a")
 
-for instance_file, test_file in zip(train_folds, test_folds):
+def run_fold(inp):
+	instance_file = inp[0]
+	test_file = inp[1]
+
 	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 7200,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 86400,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": "true",
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
                      # Alternatively, you can also disable this.
                      # Then you should handle runtime and memory yourself in the TA
-                     "cutoff": 60,  # runtime limit for target algorithm
+                     "cutoff": 200,  # runtime limit for target algorithm
                      "memory_limit": 3072,  # adat this to reasonable value for your hardware
                      #"instances": instances
-                     "instance_file": instance_file#,
+                     "instance_file": instance_file,
                      #"test_insts": test_file
                      })
 
 	# To optimize, we pass the function to the SMAC-object
-	smac = SMAC4AC(scenario=scenario, rng=np.random.RandomState(421),
+	smac = SMAC4HPO(scenario=scenario, rng=np.random.RandomState(421),
              tae_runner=run_situated_temporal_planner)#,
              #intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
 
@@ -222,9 +251,8 @@ for instance_file, test_file in zip(train_folds, test_folds):
 	finally:
 	    incumbent = smac.solver.incumbent
 
-	
-
 	solved_baseline = 0
+	solved_default = 0
 	solved_incumbent = 0
 	f = open(test_file, "r")
 	for line in f.read().splitlines():
@@ -232,17 +260,31 @@ for instance_file, test_file in zip(train_folds, test_folds):
 		gatb = smac.get_tae_runner().run(config="baseline", seed=0, instance=line, cutoff=200)[1]
 		if gatb < GAT_UNSOLVED:
 			solved_baseline = solved_baseline + 1
+		gatc = smac.get_tae_runner().run(config=cs.get_default_configuration(), seed=0, instance=line, cutoff=200)[1]
+		if gatc < GAT_UNSOLVED:
+			solved_default = solved_default + 1
 		gatc = smac.get_tae_runner().run(config=incumbent, seed=0, instance=line, cutoff=200)[1]
 		if gatc < GAT_UNSOLVED:
 			solved_incumbent = solved_incumbent + 1
 	f.close()
 
-	print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_incumbent) + "\n")
+	print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
 
-	results_f.write(instance_file + ", " + str(solved_baseline) + ", "+  str(solved_incumbent) + "\n")
+
+	results_f = open("results.summary.txt", "a")
+	results_f.write(instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
 	results_f.flush()
 	#sys.exit(0)
+	results_f.close()
 
-results_f.close()
 
+#with Pool(32,daemon=False) as p:
+#	p.map(run_fold, zip(train_folds, test_folds))
 
+#for instance_file, test_file in zip(train_folds, test_folds):
+#	print("python3 smac_situated_temporal_planning.py", instance_file, test_file)
+
+	#run_fold((instance_file, test_file))
+
+if __name__ == "__main__":
+	run_fold( (sys.argv[1], sys.argv[2]) )

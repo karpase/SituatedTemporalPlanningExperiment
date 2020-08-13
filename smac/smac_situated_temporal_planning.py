@@ -20,7 +20,8 @@ logger = logging.getLogger("situated-temporal-planning-smac")
 logging.basicConfig(level=logging.INFO)
 
 
-GAT_UNSOLVED = 1000000000
+GAT_UNSOLVED = 2000
+#GAT_UNSOLVED = 1000000000
 
 def generate_instances():
 	domains = defaultdict(list)
@@ -180,15 +181,23 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
     str_output = sr.decode("utf-8")   
     if str_output.find("Solution Found") > -1:
         lines = str_output.split("\n")
-        #print("solved1", lines)
-        last_line = lines[-2]
-        words = last_line.split(" ")
-        start_time = words[0]
-        dur = words[-3]
-        #print("solved2", start_time, dur)
-        gat = float(start_time[:-2]) + float(dur[1:-2])
-        #print("solved, gat=",gat)
-        return gat
+
+        for line in lines:
+             if line[:6] == "; Time":
+                  words = line.split(" ")
+                  time = float(words[2])
+#                  print(line, time)
+                  return time
+
+        ##print("solved1", lines)
+        #last_line = lines[-2]
+        #words = last_line.split(" ")
+        #start_time = words[0]
+        #dur = words[-3]
+        ##print("solved2", start_time, dur)
+        #gat = float(start_time[:-2]) + float(dur[1:-2])
+        ##print("solved, gat=",gat)
+        #return gat
 
     #print("no solution found")
     return GAT_UNSOLVED
@@ -222,7 +231,7 @@ def run_fold(inp):
 	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 7200,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*24,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": "true",
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime

@@ -174,7 +174,8 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
                     "--ijcai-t_u", str(cfg["t_u"]),         
                     "--ijcai-gamma", str(cfg["gamma"]),        
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
-                    "--min-probability-failure", str(cfg["min_pf"]),
+                    "--min-probability-failure", str(0.01),
+#                    "--min-probability-failure", str(cfg["min_pf"]),
                     domfile_by_probfile[instance], instance]
     #print(l)
     sr = subprocess.check_output(l)
@@ -213,11 +214,12 @@ cs = ConfigurationSpace()
 t_u = UniformIntegerHyperparameter("t_u", 1, 1000, default_value=100, log=True)
 gamma = UniformFloatHyperparameter("gamma", 0.01, 1000, default_value=10, log=True)
 r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
-min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
-nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=100, log=True)
+#min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
+nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)
 
 
 cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
+cs.add_hyperparameters([t_u, gamma, r,  nexp])
 
 
 

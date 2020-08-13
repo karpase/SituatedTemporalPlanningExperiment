@@ -218,7 +218,7 @@ r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
 nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)
 
 
-cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
+#cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
 cs.add_hyperparameters([t_u, gamma, r,  nexp])
 
 

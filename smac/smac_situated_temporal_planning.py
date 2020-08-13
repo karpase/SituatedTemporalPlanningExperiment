@@ -159,7 +159,7 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
         float
     """
    
-    #print("inst", instance)
+    #print("inst", instance, "cfg", cfg, "seed", seed)
 
 
     if cfg == "baseline":
@@ -235,7 +235,7 @@ def run_fold(inp):
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
                      "wallclock-limit": 3600*24,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
-                     "deterministic": "true",
+                     "deterministic": "false",
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
                      # Alternatively, you can also disable this.
                      # Then you should handle runtime and memory yourself in the TA
@@ -248,8 +248,7 @@ def run_fold(inp):
 
 	# To optimize, we pass the function to the SMAC-object
 	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
-             tae_runner=run_situated_temporal_planner)#,
-             #intensifier_kwargs=intensifier_kwargs)  # all arguments related to intensifier can be passed like this
+             tae_runner=run_situated_temporal_planner,intensifier_kwargs={"n_seeds":3})  # all arguments related to intensifier can be passed like this
 
 	# Example call of the function with default values
 	# It returns: Status, Cost, Runtime, Additional Infos

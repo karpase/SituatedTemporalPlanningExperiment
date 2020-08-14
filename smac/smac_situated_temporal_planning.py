@@ -10,6 +10,7 @@ from smac.facade.smac_bohb_facade import BOHB4HPO
 from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 import sys
+import statistics
 
 import subprocess
 from sklearn.model_selection import KFold 
@@ -20,8 +21,7 @@ logger = logging.getLogger("situated-temporal-planning-smac")
 logging.basicConfig(level=logging.INFO)
 
 
-GAT_UNSOLVED = 2000
-#GAT_UNSOLVED = 1000000000
+GAT_UNSOLVED = 2147483647.0
 
 def generate_instances():
 	domains = defaultdict(list)
@@ -138,6 +138,8 @@ read_folds()
 
 
 
+
+
 # Target Algorithm
 # The signature of the function determines what arguments are passed to it
 # i.e., budget is passed to the target algorithm if it is present in the signature
@@ -204,6 +206,15 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
     return GAT_UNSOLVED
 
 
+def run_repeated_situated_temporal_planner(cfg, seed, instance, **kwargs):
+	l = []
+	for i in range(3):
+		l.append(run_situated_temporal_planner(cfg, seed, instance))
+	return statistics.mean(l)
+
+
+
+
 # Build Configuration Space which defines all parameters and their ranges.
 # To illustrate different parameter types,
 # we use continuous, integer and categorical parameters.
@@ -212,7 +223,7 @@ cs = ConfigurationSpace()
 
 # Parameters for improved greedy metareasoning scheme
 t_u = UniformIntegerHyperparameter("t_u", 1, 1000, default_value=100, log=True)
-gamma = UniformFloatHyperparameter("gamma", 0.01, 1000, default_value=10, log=True)
+gamma = UniformFloatHyperparameter("gamma", 0.01, 1000, default_value=2, log=True)
 r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
 #min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
 nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)
@@ -233,9 +244,9 @@ def run_fold(inp):
 	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 3600*24,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*6,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
-                     "deterministic": "false",
+                     "deterministic": True,
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
                      # Alternatively, you can also disable this.
                      # Then you should handle runtime and memory yourself in the TA
@@ -248,7 +259,11 @@ def run_fold(inp):
 
 	# To optimize, we pass the function to the SMAC-object
 	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
-             tae_runner=run_situated_temporal_planner,intensifier_kwargs={"n_seeds":3})  # all arguments related to intensifier can be passed like this
+             tae_runner=run_repeated_situated_temporal_planner,intensifier_kwargs={})  # all arguments related to intensifier can be passed like this
+
+
+	#print(smac.get_tae_runner().run(config="baseline", seed=0, instance="../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/instances/instance-6.pddl", cutoff=200))
+
 
 	# Example call of the function with default values
 	# It returns: Status, Cost, Runtime, Additional Infos
@@ -262,6 +277,12 @@ def run_fold(inp):
 	finally:
 	    incumbent = smac.solver.incumbent
 
+	cf = open(instance_file + ".smac.cfg", "w")
+	print(incumbent, file=cf)
+	cf.flush()
+	cf.close()
+
+
 	solved_baseline = 0
 	solved_default = 0
 	solved_incumbent = 0
@@ -271,12 +292,16 @@ def run_fold(inp):
 		gatb = smac.get_tae_runner().run(config="baseline", seed=0, instance=line, cutoff=200)[1]
 		if gatb < GAT_UNSOLVED:
 			solved_baseline = solved_baseline + 1
-		gatc = smac.get_tae_runner().run(config=cs.get_default_configuration(), seed=0, instance=line, cutoff=200)[1]
-		if gatc < GAT_UNSOLVED:
+		gatd = smac.get_tae_runner().run(config=cs.get_default_configuration(), seed=0, instance=line, cutoff=200)[1]
+		if gatd < GAT_UNSOLVED:
 			solved_default = solved_default + 1
 		gatc = smac.get_tae_runner().run(config=incumbent, seed=0, instance=line, cutoff=200)[1]
 		if gatc < GAT_UNSOLVED:
 			solved_incumbent = solved_incumbent + 1
+		detailed_results_file = open("results.detailed.txt", "a")
+		print(line, gatb, gatd, gatc, sep=",", file=detailed_results_file)
+		detailed_results_file.flush()
+		detailed_results_file.close()
 	f.close()
 
 	print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")

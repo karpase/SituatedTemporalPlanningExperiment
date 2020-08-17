@@ -12,6 +12,8 @@ from smac.scenario.scenario import Scenario
 import sys
 import statistics
 
+from ConfigSpace.read_and_write import json
+
 import subprocess
 from sklearn.model_selection import KFold 
 from multiprocessing import Pool
@@ -236,15 +238,13 @@ cs.add_hyperparameters([t_u, gamma, r,  nexp])
 
 
 
+def train(instance_file):
 
-def run_fold(inp):
-	instance_file = inp[0]
-	test_file = inp[1]
+	print("Finding best configuration for: ", instance_file)
 
-	print("Finding best configuration for: ", instance_file," test file", test_file)
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 3600*6,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*72,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": True,
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
@@ -282,35 +282,72 @@ def run_fold(inp):
 	cf.flush()
 	cf.close()
 
+def read_config(filename):
+	f = open(filename,"r")
+	l = f.readlines()
+	f.close()
+	c = {}
 
-	solved_baseline = 0
-	solved_default = 0
-	solved_incumbent = 0
+	for line in l[1:]:
+		if len(line) > 3:
+			varname = line.split(" ")[2].replace(",","")
+			varval = float(line.split(" ")[4])
+			c[varname] = varval
+	return c
+
+def test(test_file, config_names):
+	# SMAC scenario object
+	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
+                     "wallclock-limit": 3600*72,  # max duration to run the optimization (in seconds)
+                     "cs": cs,  # configuration space
+                     "deterministic": True,
+                     "limit_resources": True,  # Uses pynisher to limit memory and runtime
+                     # Alternatively, you can also disable this.
+                     # Then you should handle runtime and memory yourself in the TA
+                     "cutoff": 200,  # runtime limit for target algorithm
+                     "memory_limit": 3072,  # adat this to reasonable value for your hardware
+                     #"instances": instances
+                     "instance_file": test_file,
+                     #"test_insts": test_file
+                     })
+
+	# To optimize, we pass the function to the SMAC-object
+	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
+             tae_runner=run_repeated_situated_temporal_planner,intensifier_kwargs={})  # all arguments related to intensifier can be passed like this
+
+	configs = {}
+	solved = {}
+	for config_name in config_names:
+		solved[config_name] = 0
+		if config_name == "baseline":
+			config = "baseline"
+		elif config_name == "default":
+			config = cs.get_default_configuration()
+		else:
+			config = read_config(config_name)
+		configs[config_name] = config
+
 	f = open(test_file, "r")
 	for line in f.read().splitlines():
-		#print(line)
-		gatb = smac.get_tae_runner().run(config="baseline", seed=0, instance=line, cutoff=200)[1]
-		if gatb < GAT_UNSOLVED:
-			solved_baseline = solved_baseline + 1
-		gatd = smac.get_tae_runner().run(config=cs.get_default_configuration(), seed=0, instance=line, cutoff=200)[1]
-		if gatd < GAT_UNSOLVED:
-			solved_default = solved_default + 1
-		gatc = smac.get_tae_runner().run(config=incumbent, seed=0, instance=line, cutoff=200)[1]
-		if gatc < GAT_UNSOLVED:
-			solved_incumbent = solved_incumbent + 1
-		detailed_results_file = open("results.detailed.txt", "a")
-		print(line, gatb, gatd, gatc, sep=",", file=detailed_results_file)
-		detailed_results_file.flush()
-		detailed_results_file.close()
-	f.close()
+	#	#print(line)
+		for config_name in configs:
+			gat = smac.get_tae_runner().run(config=configs[config_name], seed=0, instance=line, cutoff=200)[1]
+			if gat < GAT_UNSOLVED:
+				solved[config_name] = solved[config_name] + 1
 
-	print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
+			detailed_results_file = open("results.detailed.txt", "a")
+			print(line, config_name, gat, sep=",", file=detailed_results_file)
+			detailed_results_file.flush()
+			detailed_results_file.close()
+	#f.close()
+
+	#print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
 
 
 	results_f = open("results.summary.txt", "a")
 	results_f.write(instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
 	results_f.flush()
-	#sys.exit(0)
+	##sys.exit(0)
 	results_f.close()
 
 
@@ -323,4 +360,7 @@ def run_fold(inp):
 	#run_fold((instance_file, test_file))
 
 if __name__ == "__main__":
-	run_fold( (sys.argv[1], sys.argv[2]) )
+	if sys.argv[1] == "train":
+		train( sys.argv[2] )
+	if sys.argv[1] == "test":
+		test( sys.argv[2], sys.argv[3:] )

@@ -56,13 +56,26 @@ for r in range(1,3):
 		problem = "pddl-instances/rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 		domains[name].append((domain,problem))
 
+domains = defaultdict(list)
+
+name = "turtlebot"
+for y in range(1,9):
+	domain = "pddl-instances/turtlebot/bailout1/domain_turtlebot_bailout.pddl"
+	problem = "pddl-instances/turtlebot/bailout1/problem_turtlebot_4_bailout_" + str(y) + ".pddl"
+	domains[name].append((domain,problem))
+
+for y in range(1,7):
+	domain = "pddl-instances/turtlebot/bailout2/domain_turtlebot_bailout.pddl"
+	problem = "pddl-instances/turtlebot/bailout2//problem_turtlebot_5_bailout_" + str(y) + ".pddl"
+	domains[name].append((domain,problem))
 
 
 planner = "./rewrite-no-lp"
 configurations = []
 #configurations.append( ("ijcai","--deadline-aware-open-list IJCAI --forbid-self-overlapping-actions") )
 
-#configurations.append( ("icaps2018","./rewrite-no-lp --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+configurations.append( ("icaps2018","./rewrite-no-lp --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+configurations.append( ("icaps2018_gbfs","./rewrite-no-lp --g-weight 0 --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
 #configurations.append( ("best_g", "./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.01) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(10) + " --ijcai-t_u " + str(100)) )
 #configurations.append( ("best_g__new_gamma", "./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.01) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --new-gamma " + str(1.1111) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1) ) )
 #configurations.append( ("best_g__nexp_100", "./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.01) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(10) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(100) ) )

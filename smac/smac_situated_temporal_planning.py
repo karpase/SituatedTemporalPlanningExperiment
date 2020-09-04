@@ -34,12 +34,6 @@ def generate_instances():
 		problem = "../pddl-instances/ipc-2004/domains/airport-temporal-time-windows-strips/instances/instance-" + str(x) + ".pddl"
 		domains[name].append((domain,problem))
 
-	name = "pipesworld-no-tankage-temporal-deadlines"	
-	for x in range(1,31): 
-		domain = "../pddl-instances/ipc-2004/domains/pipesworld-no-tankage-temporal-deadlines-strips/domain.pddl" 
-		problem = "../pddl-instances/ipc-2004/domains/pipesworld-no-tankage-temporal-deadlines-strips/instances/instance-" + str(x) + ".pddl"
-		domains[name].append((domain,problem))
-
 
 	name = "umts-flaw-temporal-time-windows"	
 	for x in range(1,51): 
@@ -72,14 +66,36 @@ def generate_instances():
 		domains[name].append((domain,problem))
 
 
-	#domains = defaultdict(list)
-
 	for r in range(1,3):
 		name = "rcll-" + str(r) + "-robots"
 		for o in range(1,101):		
 			domain = "../pddl-instances/rcll/rcll_domain_production_durations_time_windows.pddl"
 			problem = "../pddl-instances/rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 			domains[name].append((domain,problem))
+
+
+	name = "pipesworld-no-tankage-temporal-deadlines"	
+	for x in range(1,31): 
+		domain = "../pddl-instances/ipc-2004/domains/pipesworld-no-tankage-temporal-deadlines-strips/domain.pddl" 
+		problem = "../pddl-instances/ipc-2004/domains/pipesworld-no-tankage-temporal-deadlines-strips/instances/instance-" + str(x) + ".pddl"
+		domains[name].append((domain,problem))
+
+
+
+	name = "turtlebot"
+	for y in range(1,9):
+        	domain = "../pddl-instances/turtlebot/bailout1/domain_turtlebot_bailout.pddl"
+        	problem = "../pddl-instances/turtlebot/bailout1/problem_turtlebot_4_bailout_" + str(y) + ".pddl"
+        	domains[name].append((domain,problem))
+
+	for y in range(1,7):
+        	domain = "../pddl-instances/turtlebot/bailout2/domain_turtlebot_bailout.pddl"
+        	problem = "../pddl-instances/turtlebot/bailout2//problem_turtlebot_5_bailout_" + str(y) + ".pddl"
+        	domains[name].append((domain,problem))
+
+
+
+
 	return domains
 
 domains = generate_instances()
@@ -132,8 +148,8 @@ def generate_zipper_folds():
                         f.close()
                         test_folds.append(test_filename)
 
-#generate_zipper_folds()
-read_folds()
+generate_zipper_folds()
+#read_folds()
 
 
 
@@ -167,9 +183,16 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
 
 
     if cfg == "baseline":
-        l = ["../rewrite-no-lp", "--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+        l = ["../rewrite-no-lp", 
+		#"--real-to-plan-time-multiplier","10",
+		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+    if cfg == "baseline-greedy":
+        l = ["../rewrite-no-lp", 
+		#"--real-to-plan-time-multiplier","10",
+		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
     else:   
         l = ["../rewrite-no-lp", 
+#                    "--real-to-plan-time-multiplier","10",
                     "--include-metareasoning-time",
                     "--forbid-self-overlapping-actions",
                     "--deadline-aware-open-list", "IJCAI",
@@ -224,9 +247,9 @@ cs = ConfigurationSpace()
 
 
 # Parameters for improved greedy metareasoning scheme
-t_u = UniformIntegerHyperparameter("t_u", 1, 1000, default_value=100, log=True)
-gamma = UniformFloatHyperparameter("gamma", 0.01, 1000, default_value=2, log=True)
-r = UniformIntegerHyperparameter("r", 1, 1000, default_value=100, log=True)
+t_u = UniformIntegerHyperparameter("t_u", 10, 1000, default_value=100, log=True)
+gamma = UniformFloatHyperparameter("gamma", 0.2, 10, default_value=2)
+r = UniformIntegerHyperparameter("r", 10, 1000, default_value=100, log=True)
 #min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
 nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)
 
@@ -344,11 +367,11 @@ def test(test_file, config_names):
 	#print("***", instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
 
 
-	results_f = open("results.summary.txt", "a")
-	results_f.write(instance_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
-	results_f.flush()
+	#results_f = open("results.summary.txt", "a")
+	#results_f.write(test_file + ", " + str(solved_baseline) + ", "+  str(solved_default) + ", " + str(solved_incumbent) + "\n")
+	#results_f.flush()
 	##sys.exit(0)
-	results_f.close()
+	#results_f.close()
 
 
 #with Pool(32,daemon=False) as p:

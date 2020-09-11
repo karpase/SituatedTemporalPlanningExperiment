@@ -179,18 +179,19 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
         float
     """
    
-    #print("inst", instance, "cfg", cfg, "seed", seed)
-
+    print("inst", instance, "cfg", cfg, "seed", seed)
 
     if cfg == "baseline":
         l = ["../rewrite-no-lp", 
 		#"--real-to-plan-time-multiplier","10",
 		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
-    if cfg == "baseline-greedy":
+    elif cfg == "baseline-greedy":
         l = ["../rewrite-no-lp", 
 		#"--real-to-plan-time-multiplier","10",
 		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
     else:   
+        print(type(cfg),type(cfg["r"]))
+
         l = ["../rewrite-no-lp", 
 #                    "--real-to-plan-time-multiplier","10",
                     "--include-metareasoning-time",

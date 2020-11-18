@@ -200,9 +200,9 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
                     "--calculate-Q-interval", str(cfg["r"]),
                     "--slack-from-heuristic",
                     "--ijcai-t_u", str(cfg["t_u"]),         
-                    "--ijcai-gamma", str(cfg["gamma"]),        
+                    "--new-gamma", str(cfg["gamma"]),        
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
-                    "--min-probability-failure", str(0.01),
+                    "--min-probability-failure", str(0.001),
 #                    "--min-probability-failure", str(cfg["min_pf"]),
                     domfile_by_probfile[instance], instance]
     #print(l)
@@ -249,7 +249,7 @@ cs = ConfigurationSpace()
 
 # Parameters for improved greedy metareasoning scheme
 t_u = UniformIntegerHyperparameter("t_u", 10, 1000, default_value=100, log=True)
-gamma = UniformFloatHyperparameter("gamma", 0.2, 10, default_value=2)
+gamma = UniformFloatHyperparameter("gamma", -10, 1, default_value=-1)
 r = UniformIntegerHyperparameter("r", 10, 1000, default_value=100, log=True)
 #min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
 nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)

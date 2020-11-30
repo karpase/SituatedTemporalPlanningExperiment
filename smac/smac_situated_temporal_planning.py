@@ -82,12 +82,13 @@ def generate_instances():
 
 
 
-	name = "turtlebot"
+	name = "turtlebot4"
 	for y in range(1,9):
         	domain = "../pddl-instances/turtlebot/bailout1/domain_turtlebot_bailout.pddl"
         	problem = "../pddl-instances/turtlebot/bailout1/problem_turtlebot_4_bailout_" + str(y) + ".pddl"
         	domains[name].append((domain,problem))
 
+	name = "turtlebot5"
 	for y in range(1,7):
         	domain = "../pddl-instances/turtlebot/bailout2/domain_turtlebot_bailout.pddl"
         	problem = "../pddl-instances/turtlebot/bailout2//problem_turtlebot_5_bailout_" + str(y) + ".pddl"
@@ -198,13 +199,18 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
                     "--forbid-self-overlapping-actions",
                     "--deadline-aware-open-list", "IJCAI",
                     "--calculate-Q-interval", str(cfg["r"]),
+		    "--add-weighted-f-value-to-Q", str(cfg["fweight"]),
                     "--slack-from-heuristic",
                     "--ijcai-t_u", str(cfg["t_u"]),         
                     "--new-gamma", str(cfg["gamma"]),        
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
-                    "--min-probability-failure", str(0.001),
+                    "--min-probability-failure", str(cfg["minpf"]),
 #                    "--min-probability-failure", str(cfg["min_pf"]),
                     domfile_by_probfile[instance], instance]
+
+    if str(cfg["allocate_tu"]) == "1":
+        l.insert(2,"--allocate-t_u-expansions")
+
     #print(l)
     sr = subprocess.check_output(l)
     str_output = sr.decode("utf-8")   
@@ -250,13 +256,14 @@ cs = ConfigurationSpace()
 # Parameters for improved greedy metareasoning scheme
 t_u = UniformIntegerHyperparameter("t_u", 10, 1000, default_value=100, log=True)
 gamma = UniformFloatHyperparameter("gamma", -10, 1, default_value=-1)
+allocate_tu = UniformIntegerHyperparameter("allocate_tu", 0, 1, default_value=1)
 r = UniformIntegerHyperparameter("r", 10, 1000, default_value=100, log=True)
-#min_pf = UniformFloatHyperparameter("min_pf", 0.001, 0.1, default_value=0.01, log=True)
+min_pf = UniformFloatHyperparameter("minpf", 0.001, 0.1, default_value=0.01, log=True)
+fweight = UniformFloatHyperparameter("fweight", 0.0000000001, 100, default_value=0.00001, log=True)
 nexp = UniformIntegerHyperparameter("nexp", 1, 100000, default_value=1000, log=True)
 
 
-#cs.add_hyperparameters([t_u, gamma, r, min_pf, nexp])
-cs.add_hyperparameters([t_u, gamma, r,  nexp])
+cs.add_hyperparameters([t_u, gamma, allocate_tu, r, min_pf, fweight, nexp])
 
 
 

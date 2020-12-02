@@ -74,7 +74,7 @@ configurations = []
 
 configurations.append( ("baseline","./rewrite-no-lp --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
 
-for gamma in [1]:
+for gamma in [-2,-1,0,1,2]:
 	for min_pf in [0.0001]:
 		for fweight in [-0.0001]:
 			for t_u in [100]:

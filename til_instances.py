@@ -92,9 +92,9 @@ for gamma in [1]:
 				for r in [100]:
 					for nexp in [1000]:
 						for real_time_multiplier in [1]:
-							configurations.append( ("dda_allocate_tu__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
+							configurations.append( ("dda_allocate_tu__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier) + "__fweight" + str(fweight), 
 								"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-							configurations.append( ("dda_hs__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
+							configurations.append( ("dda_hs__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier) + "__fweight_" + str(fweight), 
 								"./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
 
 

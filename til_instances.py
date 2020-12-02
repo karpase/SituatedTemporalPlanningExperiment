@@ -72,9 +72,9 @@ planner = "./rewrite-no-lp"
 configurations = []
 #configurations.append( ("ijcai","--deadline-aware-open-list IJCAI --forbid-self-overlapping-actions") )
 
-configurations.append( ("icaps2018","./rewrite-no-lp --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
-configurations.append( ("dda_default", "./rewrite-no-lp --forbid-self-overlapping-actions --slack-from-heuristic --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.001) + " --deadline-aware-open-list IJCAI --new-gamma " + str(-1) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1000) ))
-configurations.append( ("dda_default_allocate_tu", "./rewrite-no-lp --forbid-self-overlapping-actions --slack-from-heuristic --include-metareasoning-time --allocate-t_u-expansions --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.001) + " --deadline-aware-open-list IJCAI --new-gamma " + str(-1) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1000) ))
+configurations.append( ("baseline","./rewrite-no-lp --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+#configurations.append( ("dda_default", "./rewrite-no-lp --forbid-self-overlapping-actions --slack-from-heuristic --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.00001) + " --deadline-aware-open-list IJCAI --ijcai-gamma " + str(1) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1000) ))
+#configurations.append( ("dda_default_allocate_tu", "./rewrite-no-lp --forbid-self-overlapping-actions --slack-from-heuristic --include-metareasoning-time --allocate-t_u-expansions --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.001) + " --deadline-aware-open-list IJCAI --new-gamma " + str(-1) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1000) ))
 
 #configurations.append( ("icaps2018_gbfs","./rewrite-no-lp --g-weight 0 --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
 #configurations.append( ("best_g", "./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.01) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(10) + " --ijcai-t_u " + str(100)) )
@@ -85,17 +85,17 @@ configurations.append( ("dda_default_allocate_tu", "./rewrite-no-lp --forbid-sel
 #configurations.append( ("best_g__nexp_1000_gamma_2", "./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(1) + " --calculate-Q-interval " + str(100) + "  --min-probability-failure " + str(0.01) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(2) + " --ijcai-t_u " + str(100) + " --icaps-for-n-expansions " + str(1000) ) )
 
 #for gamma in [-1000000, -10, -1, -0.1, 0, 0.1,  1, 10]:
-#for gamma in [-2, -0.5]:
-#	for min_pf in [0.001, 0.01]:
-#		for t_u in [100, 1000, "ETD"]:
-#			for r in [100, 1000]:
-#				for nexp in [1, 10, 100, 1000]:
-#					for real_time_multiplier in [1]:
-#						configurations.append( ("mt_improved_greedy__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
-#							"./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + "  --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --new-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-#						if gamma == 0:
-#							configurations.append( ("mt_improved_greedy_sanity__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
-#								"./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + "  --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
+for gamma in [1]:
+	for min_pf in [0.0001]:
+		for fweight in [0.0001]:
+			for t_u in [100]:
+				for r in [100]:
+					for nexp in [1000]:
+						for real_time_multiplier in [1]:
+							configurations.append( ("dda_allocate_tu__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
+								"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
+							configurations.append( ("dda_hs__r_" + str(r) + "__gamma_" + str(gamma) + "__nexp_" + str(nexp) + "__tu_" + str(t_u) + "__min_pf_" + str(min_pf) + "__rtm_" + str(real_time_multiplier), 
+								"./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
 
 
 

@@ -11,7 +11,7 @@ from smac.facade.smac_ac_facade import SMAC4AC
 from smac.scenario.scenario import Scenario
 import sys
 import statistics
-
+import os
 from ConfigSpace.read_and_write import json
 
 import subprocess
@@ -102,9 +102,11 @@ def generate_instances():
 domains = generate_instances()
 
 domfile_by_probfile = {}
+domname_by_probfile = {}
 for d in domains:
 	for domfile,probfile in domains[d]:
 		domfile_by_probfile[probfile] = domfile
+		domname_by_probfile[probfile] = d
 
 
 train_folds = []
@@ -135,6 +137,7 @@ def generate_zipper_folds():
                 split = [domains[d][0::2], domains[d][1::2]]
 
                 for i in range(2):
+
                         train_filename = "folds/" + d + "_fold_" + str(i) + "_train.txt"
                         f = open(train_filename,"w")
                         for t in split[i]:
@@ -157,6 +160,32 @@ generate_zipper_folds()
 
 
 
+def get_planner_commandline(cfg, instance):
+    if cfg == "baseline":
+        l = ["../rewrite-no-lp", 
+		#"--real-to-plan-time-multiplier","10",
+		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+    elif cfg == "baseline-greedy":
+        l = ["../rewrite-no-lp", 
+		#"--real-to-plan-time-multiplier","10",
+		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+    else:   
+
+        l = ["../rewrite-no-lp", 
+                    "--allocate-t_u-expansions",
+                    "--include-metareasoning-time",
+                    "--forbid-self-overlapping-actions",
+                    "--deadline-aware-open-list", "IJCAI",
+                    "--calculate-Q-interval", str(cfg["t_u"]),
+		    "--add-weighted-f-value-to-Q", str(-0.000001),
+                    "--slack-from-heuristic",
+                    "--ijcai-t_u", str(cfg["t_u"]),
+                    "--ijcai-gamma", str(cfg["gamma"]),
+                    "--icaps-for-n-expansions", str(cfg["nexp"]),
+                    "--min-probability-failure", str(0.0001),
+                    domfile_by_probfile[instance], instance]
+
+    return l
 
 
 # Target Algorithm
@@ -182,30 +211,7 @@ def run_situated_temporal_planner(cfg, seed, instance, **kwargs):
    
     print("inst", instance, "cfg", cfg, "seed", seed)
 
-    if cfg == "baseline":
-        l = ["../rewrite-no-lp", 
-		#"--real-to-plan-time-multiplier","10",
-		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
-    elif cfg == "baseline-greedy":
-        l = ["../rewrite-no-lp", 
-		#"--real-to-plan-time-multiplier","10",
-		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
-    else:   
-        print(type(cfg),type(cfg["r"]))
-
-        l = ["../rewrite-no-lp", 
-                    "--allocate-t_u-expansions",
-                    "--include-metareasoning-time",
-                    "--forbid-self-overlapping-actions",
-                    "--deadline-aware-open-list", "IJCAI",
-                    "--calculate-Q-interval", str(cfg["t_u"]),
-		    "--add-weighted-f-value-to-Q", str(-0.000001),
-                    "--slack-from-heuristic",
-                    "--ijcai-t_u", str(cfg["t_u"]),
-                    "--ijcai-gamma", str(cfg["gamma"]),
-                    "--icaps-for-n-expansions", str(cfg["nexp"]),
-                    "--min-probability-failure", str(0.0001),
-                    domfile_by_probfile[instance], instance]
+    l = get_planner_commandline(cfg, instance)
 
 
     #print(l)
@@ -323,6 +329,32 @@ def read_config(filename):
 			c[varname] = varval
 	return c
 
+def testgen(test_file, config_names, num_reps):
+        configs = {}
+        for config_name in config_names:
+                if config_name == "baseline":
+                        config = "baseline"
+                elif config_name == "default":
+                        config = cs.get_default_configuration()
+                else:
+                        config = read_config(config_name)
+                configs[config_name] = config
+
+        f = open(test_file, "r")
+        for line in f.read().splitlines():
+                for config_name in configs:
+                        l = get_planner_commandline(configs[config_name],line)
+                        d = domname_by_probfile[line]
+                        i = domains[d].index( (domfile_by_probfile[line], line) )                        
+                        os.makedirs("res/" + d + "/" + str(i))
+                        for ri in range(num_reps):
+                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/atuned_r" + str(ri) + ".log)"
+                            print(cmdline)
+
+
+
+
+
 def test(test_file, config_names):
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
@@ -342,6 +374,7 @@ def test(test_file, config_names):
 	# To optimize, we pass the function to the SMAC-object
 	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
              tae_runner=run_repeated_situated_temporal_planner,intensifier_kwargs={})  # all arguments related to intensifier can be passed like this
+
 
 	configs = {}
 	solved = {}
@@ -392,3 +425,5 @@ if __name__ == "__main__":
 		train( sys.argv[2] )
 	if sys.argv[1] == "test":
 		test( sys.argv[2], sys.argv[3:] )
+	if sys.argv[1] == "testgen":
+		testgen( sys.argv[2], sys.argv[3:], 20 )

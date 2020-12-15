@@ -72,9 +72,9 @@ planner = "./rewrite-no-lp"
 configurations = []
 #configurations.append( ("ijcai","--deadline-aware-open-list IJCAI --forbid-self-overlapping-actions") )
 
-for rep in range(10):
-	for tilmult in [0.25, 0.5, 2, 4]:
-		configurations.append( ("baseline__tilmult_" + str(tilmult) + "__r" + str(rep),"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+for rep in range(20):
+	for tilmult in [1]:
+#		configurations.append( ("baseline__tilmult_" + str(tilmult) + "__r" + str(rep),"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
 
 		for gamma in [1]:
 			for min_pf in [0.0001]:
@@ -83,12 +83,14 @@ for rep in range(10):
 						for r in [100]:
 							for nexp in [1000]:
 								for real_time_multiplier in [1]:
-									configurations.append( ("dda__tilmult_" + str(tilmult) + "__r" + str(rep), 
-										"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
+									#configurations.append( ("dda__tilmult_" + str(tilmult) + "__r" + str(rep), 
+									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
 									#configurations.append( ("dda__gamma0__r" + str(rep), 
 									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(0) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
 									#configurations.append( ("dda__fweight0__r" + str(rep), 
 									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(0) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
+									configurations.append( ("dda__fweight-1000000__r" + str(rep), 
+										"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(-1000000) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
 									#configurations.append( ("dda__nexp1__r" + str(rep), 
 									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(1) ) )
 									#configurations.append( ("dda__hs__r" + str(rep), 

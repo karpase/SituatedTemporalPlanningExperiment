@@ -85,6 +85,9 @@ def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, mi
 
 for rep in range(20):
 	for tilmult in [1]:
+		for planning_time_naive in [0.1, 1, 10, 100]:
+			configurations.append( ("naive__r" + str(rep) + "__pt_ " + str(planning_time_naive),
+				"./naive.sh " + str(planning_time_naive)  ))
 		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_ " + str(tilmult),
 			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
 		add_dda_config(configurations, rep)

@@ -72,34 +72,33 @@ planner = "./rewrite-no-lp"
 configurations = []
 #configurations.append( ("ijcai","--deadline-aware-open-list IJCAI --forbid-self-overlapping-actions") )
 
+
+def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, min_pf=0.001, t_u=100, r=100, nexp=100, fweight=-0.000001, rt_multiplier=1, tilmult=1):
+	name = 	"dda__r" + str(rep) + "__allocatetuexpansions_" + str(allocate_tu_expansions) + "__gamma_" + str(gamma) + "__minpf_" + str(min_pf) + "__tu_" + str(t_u) + "__r_" + str(r) + "__nexp_" + str(nexp) + "__fweight_" + str(fweight) + "__rtmultiplier_" + str(rt_multiplier) + "__tilmult_" + str(tilmult)
+	cmd_params = "--include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(rt_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) 
+	if allocate_tu_expansions:
+		cmd = "./rewrite-no-lp --allocate-t_u-expansions " + cmd_params
+	else:
+		cmd = "./rewrite-no-lp  " + cmd_params
+
+	configurations.append( (name, cmd) )
+
 for rep in range(20):
 	for tilmult in [1]:
-#		configurations.append( ("baseline__tilmult_" + str(tilmult) + "__r" + str(rep),"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_ " + str(tilmult),
+			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+		add_dda_config(configurations, rep)
 
-		for gamma in [1]:
-			for min_pf in [0.0001]:
-				for fweight in [-0.000001]:
-					for t_u in [100]:
-						for r in [100]:
-							for nexp in [1000]:
-								for real_time_multiplier in [1]:
-									#configurations.append( ("dda__tilmult_" + str(tilmult) + "__r" + str(rep), 
-									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-									#configurations.append( ("dda__gamma0__r" + str(rep), 
-									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(0) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-									#configurations.append( ("dda__fweight0__r" + str(rep), 
-									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(0) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-									configurations.append( ("dda__fweight-1000000__r" + str(rep), 
-										"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(-1000000) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
-									#configurations.append( ("dda__nexp1__r" + str(rep), 
-									#	"./rewrite-no-lp --allocate-t_u-expansions --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(1) ) )
-									#configurations.append( ("dda__hs__r" + str(rep), 
-									#	"./rewrite-no-lp --include-metareasoning-time --real-to-plan-time-multiplier " + str(real_time_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) ) )
+		add_dda_config(configurations, rep, allocate_tu_expansions=False)
 
+		for gamma in [-10, -1, 0, 0.5, 0.75, 1.5, 5, 10]:
+			add_dda_config(configurations, rep, gamma=gamma)
+		for tu in [1, 10, 1000, 10000]:
+			add_dda_config(configurations, rep, t_u=tu, r=tu)
+		for nexp in [1, 10, 1000, 10000]:
+			add_dda_config(configurations, rep, nexp=nexp)
+		
 
-
-#for alpha in [-10000,-1,0,0.1,1,10000]:
-#	configurations.append(("crude_greedy_alpha_" + str(alpha), "./rewrite-no-lp-crude-greedy --forbid-self-overlapping-actions --use-q-hat-with-alpha " + str(alpha)))
 
 for d in domains:
 	for (i,(dom,prob)) in enumerate(domains[d]):

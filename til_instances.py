@@ -86,20 +86,20 @@ def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, mi
 for rep in range(20):
 	for tilmult in [1]:
 		for planning_time_naive in [0.1, 1, 10, 100]:
-			configurations.append( ("naive__r" + str(rep) + "__pt_ " + str(planning_time_naive),
+			configurations.append( ("naive__r" + str(rep) + "__pt_" + str(planning_time_naive),
 				"./naive.sh " + str(planning_time_naive)  ))
-		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_ " + str(tilmult),
-			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
-		add_dda_config(configurations, rep)
+#		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_" + str(tilmult),
+#			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+#		add_dda_config(configurations, rep)
 
-		add_dda_config(configurations, rep, allocate_tu_expansions=False)
+#		add_dda_config(configurations, rep, allocate_tu_expansions=False)
 
-		for gamma in [-10, -1, 0, 0.5, 0.75, 1.5, 5, 10]:
-			add_dda_config(configurations, rep, gamma=gamma)
-		for tu in [1, 10, 1000, 10000]:
-			add_dda_config(configurations, rep, t_u=tu, r=tu)
-		for nexp in [1, 10, 1000, 10000]:
-			add_dda_config(configurations, rep, nexp=nexp)
+#		for gamma in [-10, -1, 0, 0.5, 0.75, 1.5, 5, 10]:
+#			add_dda_config(configurations, rep, gamma=gamma)
+#		for tu in [1, 10, 1000, 10000]:
+#			add_dda_config(configurations, rep, t_u=tu, r=tu)
+#		for nexp in [1, 10, 1000, 10000]:
+#			add_dda_config(configurations, rep, nexp=nexp)
 		
 
 
@@ -109,6 +109,9 @@ for d in domains:
 		assert(os.path.isfile(prob))
 		os.makedirs("res/" + d + "/" + str(i))
 		for cname,c in configurations:  
-			print("(ulimit -t 200; " + c + " " + dom + " " + prob + " >& res/" + d + "/" + str(i) + "/" + cname + ".log)")
+			if cname[:5] == "naive":
+				print("(ulimit -t 200; " + c + " " + dom + " " + prob + " " + "res/" + d + "/" + str(i) + "/" + cname + " >& res/" + d + "/" + str(i) + "/" + cname + ".log)")
+			else:
+				print("(ulimit -t 200; " + c + " " + dom + " " + prob + " >& res/" + d + "/" + str(i) + "/" + cname + ".log)")
 
 

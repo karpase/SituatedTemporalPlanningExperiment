@@ -14,7 +14,8 @@ expanded=`grep "Nodes Expanded: [0-9]*" $planner_out | awk '{print $4;}'`
 evaluated=`grep  "Nodes Evaluated: [0-9]*" $planner_out | awk '{print $4;}'`
 makespan=`tail -1 $adj_plan | awk '{print $1 + substr($(NF-2),2);}'`
 metareasoning_time=`grep "Metareasoning time (not discounted): [0-9]*" $planner_out | awk '{print $6;}'`
-disc_time=`grep "Discounted time: [0-9]*" $planner_out | awk '{print $4;}'`
+disc_time=$stime
+#`grep "Discounted time: [0-9]*" $planner_out | awk '{print $4;}'`
 
 
 

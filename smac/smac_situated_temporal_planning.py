@@ -182,7 +182,7 @@ def get_planner_commandline(cfg, instance):
                     "--ijcai-t_u", str(cfg["t_u"]),
                     "--ijcai-gamma", str(cfg["gamma"]),
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
-                    "--min-probability-failure", str(0.0001),
+                    "--min-probability-failure", str(0.001),
                     domfile_by_probfile[instance], instance]
 
     return l
@@ -278,7 +278,7 @@ def train(instance_file):
 
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 3600*72,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*24*7,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": True,
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
@@ -292,8 +292,10 @@ def train(instance_file):
                      })
 
 	# To optimize, we pass the function to the SMAC-object
-	smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
+	smac = SMAC4AC(scenario=scenario, rng=np.random.RandomState(421),
              tae_runner=run_repeated_situated_temporal_planner,intensifier_kwargs={})  # all arguments related to intensifier can be passed like this
+	#smac = BOHB4HPO(scenario=scenario, rng=np.random.RandomState(421),
+        #     tae_runner=run_repeated_situated_temporal_planner,intensifier_kwargs={})  # all arguments related to intensifier can be passed like this
 
 
 	#print(smac.get_tae_runner().run(config="baseline", seed=0, instance="../pddl-instances/ipc-2004/domains/satellite-complex-time-windows-strips/instances/instance-6.pddl", cutoff=200))
@@ -329,16 +331,15 @@ def read_config(filename):
 			c[varname] = varval
 	return c
 
-def testgen(test_file, config_names, num_reps):
+def testgen(tuned, eval, test_file, config_name, num_reps):
         configs = {}
-        for config_name in config_names:
-                if config_name == "baseline":
-                        config = "baseline"
-                elif config_name == "default":
-                        config = cs.get_default_configuration()
-                else:
-                        config = read_config(config_name)
-                configs[config_name] = config
+        if config_name == "baseline":
+            config = "baseline"
+        elif config_name == "default":
+            config = cs.get_default_configuration()
+        else:
+            config = read_config(config_name)
+        configs[config_name] = config
 
         f = open(test_file, "r")
         for line in f.read().splitlines():
@@ -348,7 +349,7 @@ def testgen(test_file, config_names, num_reps):
                         i = domains[d].index( (domfile_by_probfile[line], line) )                        
                         os.makedirs("res/" + d + "/" + str(i))
                         for ri in range(num_reps):
-                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/atuned_r" + str(ri) + ".log)"
+                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + " .log)"
                             print(cmdline)
 
 
@@ -426,4 +427,4 @@ if __name__ == "__main__":
 	if sys.argv[1] == "test":
 		test( sys.argv[2], sys.argv[3:] )
 	if sys.argv[1] == "testgen":
-		testgen( sys.argv[2], sys.argv[3:], 20 )
+		testgen( sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], 20 )

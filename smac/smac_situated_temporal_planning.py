@@ -347,9 +347,9 @@ def testgen(tuned, eval, test_file, config_name, num_reps):
                         l = get_planner_commandline(configs[config_name],line)
                         d = domname_by_probfile[line]
                         i = domains[d].index( (domfile_by_probfile[line], line) )                        
-                        os.makedirs("res/" + d + "/" + str(i))
+                        os.makedirs("res/" + d + "/" + str(i), exist_ok=True)
                         for ri in range(num_reps):
-                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + " .log)"
+                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + ".log)"
                             print(cmdline)
 
 

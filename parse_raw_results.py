@@ -219,6 +219,8 @@ order_fweight = [
  'dda__allocatetuexpansions_True__gamma_1__minpf_0.001__tu_100__r_100__nexp_100__fweight_-1000000__rtmultiplier_1__tilmult_1.log' 
  ]
 
+ 
+
 domain_short_names = {
 'airport-time-windows': 'airport',
 'pipesworld-no-tankage-temporal-deadlines': 'pw-nt',
@@ -247,32 +249,27 @@ domain_groups = [
     ]
 
 
-def get_confname(conf, param):
-    if conf[:3] == "dda":
-        if param == "tilmult":
-            confname = "DDA"
-        else:
-            confname = "DDA (" + param + " = " + config_args[conf][param] + ")"
-    elif conf[:9] == "icaps2018":
-        confname = "ICAPS 2018"
-    elif conf[:5] == "naive":
-        confname = "naive (" + conf.split("_")[-1] + ")"
+def get_confname(conf, params):
+    conftype = conf.split("__")[0]
+    valid_params = [x for x in filter(lambda param: param in config_args[conf].keys(), params)]
+    if len(valid_params) > 0:
+        confname = conf.split("__")[0] + " (" + ",".join(map(lambda param: param + " = " + config_args[conf][param], valid_params)) + ")"
     else:
-        confname = conf
+        confname = conftype
     return confname
 
-for param, config_order in [('tilmult', order_baseline), ('gamma', order_gamma), ('tu', order_tu), ('nexp', order_nexp), ('allocatetuexpansions', order_allocatetuexpansions), ('fweight', order_fweight)]:
+for params, config_order in [(['pt'], order_baseline), (['gamma'], order_gamma), (['tu'], order_tu), (['nexp'], order_nexp), (['allocatetuexpansions'], order_allocatetuexpansions), (['fweight'], order_fweight)]:
     #print("*********************************")
     #print("Results for changing ", param)
     #print("*********************************")
     
-    print("Coverage (", param, ")")
+    print("Coverage (", ",".join(params), ")")
     print("")
     print("\\resizebox{\\textwidth}{!}{\\begin{tabular}{|l" + "|rr" * len(config_order) + "|}")
     print("\\hline")
     print("Domain", end=columnsep)
     for i, conf in enumerate(config_order):
-        confname = get_confname(conf, param)
+        confname = get_confname(conf, params)
         if i < len(config_order) - 1:
             endc = columnsep
         else:
@@ -321,14 +318,14 @@ for param, config_order in [('tilmult', order_baseline), ('gamma', order_gamma),
     print("")
 
 
-    print("Win/Lose (", param, ")")
+    print("Win/Lose (", ",".join(params), ")")
     print("")
     print("\\resizebox{\\textwidth}{!}{\\begin{tabular}{|l" + "|r" * len(config_order) + "|}")
     print("\\hline")
     
     print("Domain", end=columnsep)
     for i, conf in enumerate(config_order):
-        confname = get_confname(conf, param)
+        confname = get_confname(conf, params)
         if i < len(config_order) - 1:
             endc = columnsep
         else:
@@ -416,7 +413,7 @@ for param, config_order in [('tilmult', order_baseline), ('gamma', order_gamma),
         
         print("Domain", end=columnsep)
         for i, conf in enumerate(config_order):
-            confname = get_confname(conf, param)
+            confname = get_confname(conf, params)
             if i < len(config_order) - 1:
                 endc = columnsep
             else:
@@ -466,6 +463,6 @@ for param, config_order in [('tilmult', order_baseline), ('gamma', order_gamma),
         print("")
 
 
-    print_table(1, my_gmean, "Geometric Mean Total time in seconds (" + param + ")")
-    print_table(2, my_gmean, "Geometric Mean Expansions (" + param + ")")
-    print_table(4, my_mean, "Mean Metareasoning Ratio in Percent (" + param + ")")
+    print_table(1, my_gmean, "Geometric Mean Total time in seconds (" + ",".join(params) + ")")
+    print_table(2, my_gmean, "Geometric Mean Expansions (" + ",".join(params) + ")")
+    print_table(4, my_mean, "Mean Metareasoning Ratio in Percent (" + ",".join(params) + ")")

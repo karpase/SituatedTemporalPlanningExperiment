@@ -56,6 +56,13 @@ for r in range(1,3):
 		problem = "pddl-instances/rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 		domains[name].append((domain,problem))
 
+for r in range(1,3):
+	name = "orig-rcll-" + str(r) + "-robots"
+	for o in range(1,101):		
+		domain = "pddl-instances/orig-rcll/rcll_domain_production_durations.pddl"
+		problem = "pddl-instances/orig-rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
+		domains[name].append((domain,problem))
+
 name = "turtlebot"
 for y in range(1,9):
 	domain = "pddl-instances/turtlebot/bailout1/domain_turtlebot_bailout.pddl"
@@ -85,13 +92,13 @@ def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, mi
 
 for rep in range(20):
 	for tilmult in [1]:
-#		for planning_time_naive in [0.1, 1, 10, 100]:
-#			configurations.append( ("naive__r" + str(rep) + "__pt_" + str(planning_time_naive),
-#				"./naive.sh " + str(planning_time_naive)  ))
+		for planning_time_naive in [0.1, 1, 10, 100]:
+			configurations.append( ("naive__r" + str(rep) + "__pt_" + str(planning_time_naive),
+				"./naive.sh " + str(planning_time_naive)  ))
 
-#		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_" + str(tilmult),
-#			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
-#		add_dda_config(configurations, rep)
+		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_" + str(tilmult),
+			"./rewrite-no-lp --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
+		add_dda_config(configurations, rep)
 
 #		add_dda_config(configurations, rep, allocate_tu_expansions=False)
 
@@ -102,8 +109,8 @@ for rep in range(20):
 #		for nexp in [1, 10, 1000, 10000]:
 #			add_dda_config(configurations, rep, nexp=nexp)
 
-		for fweight in [-0.000001, -1, -1000000]:
-			add_dda_config(configurations, rep, fweight=fweight)
+#		for fweight in [-0.000001, -1, -1000000]:
+#			add_dda_config(configurations, rep, fweight=fweight)
 		
 
 

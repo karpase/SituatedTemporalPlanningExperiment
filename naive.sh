@@ -7,9 +7,9 @@
 # 4. Calls VAL to check the new plan
 # Returns 0 if this works, non-zero otherwise
 
-
-PLANNER="$HOME/SituatedTemporalPlanningExperiment/rewrite-no-lp --real-to-plan-time-multiplier 0"
-VAL=$HOME/SituatedTemporalPlanningExperiment/val
+DIR=$HOME/SituatedTemporalPlanningExperiment
+PLANNER="DIR/rewrite-no-lp --html --real-to-plan-time-multiplier 0"
+VAL=$DIR/val
 
 if [ $# -lt 4 ] 
   then
@@ -19,7 +19,7 @@ fi
 
 
 # Adjust PDDL problem
-python3 adjust_til.py $2 $3 $1 $4.adj_$1
+python3 $DIR/adjust_til.py $2 $3 $1 $4.adj_$1
 
 
 # Call Planner

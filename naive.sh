@@ -8,7 +8,7 @@
 # Returns 0 if this works, non-zero otherwise
 
 DIR=$HOME/SituatedTemporalPlanningExperiment
-PLANNER="DIR/rewrite-no-lp --html --real-to-plan-time-multiplier 0"
+PLANNER="$DIR/rewrite-no-lp --html --real-to-plan-time-multiplier 0"
 VAL=$DIR/val
 
 if [ $# -lt 4 ] 

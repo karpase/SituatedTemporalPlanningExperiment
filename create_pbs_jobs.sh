@@ -1,6 +1,5 @@
 #!/bin/bash
 # $1 - file with list of commands to run
-# $2 - number of commands per PBS job
 
 rm $1.com.*
 

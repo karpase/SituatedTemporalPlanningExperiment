@@ -4,20 +4,20 @@
 rm $1.com.*
 
 shuf $1 > $1.shuf
-split -l 430 $1.shuf $1.com.
+split -l 8000 $1.shuf $1.com.
 
 for x in $1.com.*; do
     echo '#!/bin/bash' > $x.pbs;
     echo '#PBS -N' $x >> $x.pbs;
     echo '#PBS' -q zeus_all_q >> $x.pbs;
-    echo '#PBS' -l select=1:ncpus=1 >> $x.pbs;
+    echo '#PBS' -l select=1:ncpus=20 >> $x.pbs;
     echo '#PBS' -l walltime=23:55:00  >> $x.pbs;
     echo '#PBS' -m abe >> $x.pbs;
     echo '#PBS' -M  karpase@technion.ac.il >> $x.pbs;
 
-    echo PBS_O_WORKDIR=`pwd`  >> $x.pbs;
+    PBS_O_WORKDIR=`pwd`
     echo cd $PBS_O_WORKDIR  >> $x.pbs;
 
-    cat $x >> $x.pbs;
+    echo python3 $PBS_O_WORKDIR/parallel.py --filename $PBS_O_WORKDIR/$x --num_processes 20 --timeout 200 >> $x.pbs
 
 done

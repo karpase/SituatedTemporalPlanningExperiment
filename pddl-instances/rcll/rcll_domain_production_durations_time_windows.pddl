@@ -409,7 +409,7 @@
 		:parameters (?ord - order ?wp - workpiece ?m - mps ?g - ds-gate
 		             ?basecol - product-base-color ?capcol - product-cap-color
 		             ?ring1col ?ring2col - product-ring-color)
-                :duration (= ?duration 1000)
+                :duration (= ?duration 0.01)
 		:condition (and (at start (committed-for-ontime-delivery ?ord)) (at start (wp-at ?wp ?m INPUT)) (at start (wp-usable ?wp)) (over all (order-delivery-window-open ?ord))
 											 (at start (mps-type ?m DS)) (at start (mps-state ?m PROCESSING)) (at start (ds-prepared-gate ?m ?g))
 											 (at start (order-complexity ?ord C2)) (at start (order-gate ?ord ?g))

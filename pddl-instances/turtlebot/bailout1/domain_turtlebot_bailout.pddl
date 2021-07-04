@@ -1,6 +1,6 @@
 (define (domain turtlebot)
 
-;; (:requirements :strips :typing :fluents :durative-actions :number-fluents)
+(:requirements :strips :typing :fluents :durative-actions :timed-initial-literals)
 
 (:types
 	waypoint robot - object
@@ -9,7 +9,7 @@
 
 (:functions 
 	(bailout_distance)
-	(distance ?a ?b - waypoint)
+	(distance ?a - waypoint ?b - waypoint)
 )
 
 (:predicates

@@ -18,7 +18,7 @@
 ;  Read the full text in the LICENSE.GPL file in the doc directory.
 
 (define (domain rcll-production-durative)
-	(:requirements :strips :typing :durative-actions :numeric-fluents :timed-initial-literals)
+	(:requirements :strips :typing :durative-actions :timed-initial-literals)
 
 	(:types
 		robot - object

@@ -21,3 +21,5 @@ RUN (cd /root/VAL/build; make)
 RUN cp /root/VAL/build/bin/Validate /root/SituatedTemporalPlanningExperiment/val
 RUN cp /root/VAL/build/bin/libVAL.so /root/SituatedTemporalPlanningExperiment/
 
+RUN (cd /root/SituatedTemporalPlanningExperiment/; git pull)
+RUN (cd /root/SituatedTemporalPlanningExperiment/; python3 til_instances.py > run.log)

@@ -18,6 +18,6 @@ for x in $1.com.*; do
     PBS_O_WORKDIR=`pwd`
     echo cd $PBS_O_WORKDIR  >> $x.pbs;
 
-    echo python3 $PBS_O_WORKDIR/parallel.py --filename $PBS_O_WORKDIR/$x --num_processes 20 --timeout 200 >> $x.pbs
+    echo python $PBS_O_WORKDIR/parallel.py --filename $PBS_O_WORKDIR/$x --num_processes 20 --timeout 200 >> $x.pbs
 
 done

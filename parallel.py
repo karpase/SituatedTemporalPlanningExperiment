@@ -7,7 +7,7 @@ import sys
 import os
 import argparse
 import resource
-
+import shlex
 
 TIMEOUT = 200
 MEMLIMIT = 3 * 1024 * 1024 * 1024
@@ -20,7 +20,7 @@ parser.add_argument('--timeout', type=int, dest='timeout', default=TIMEOUT, help
 parser.add_argument('--memlimit', type=int, dest='memlimit', default=MEMLIMIT, help='memory limit in bytes')
 
 def run_command(cmd):
-	cmd_args = cmd.strip().split(' ')
+	cmd_args = shlex.split(cmd)
 	outfile_name = cmd_args[-1]
 	torun = cmd_args[:-1]
 	with open(outfile_name, "w") as outfile:

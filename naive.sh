@@ -19,7 +19,7 @@ fi
 
 
 # Adjust PDDL problem
-python3 $DIR/adjust_til.py $2 $3 $1 $4.adj_$1
+python $DIR/adjust_til.py $2 $3 $1 $4.adj_$1
 
 
 # Call Planner

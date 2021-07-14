@@ -89,9 +89,9 @@ configurations = []
 #configurations.append( ("ijcai","--deadline-aware-open-list IJCAI --forbid-self-overlapping-actions") )
 
 
-def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, min_pf=0.001, t_u=100, r=100, nexp=100, fweight=-0.000001, rt_multiplier=1, tilmult=1):
-	name = 	"dda__r" + str(rep) + "__allocatetuexpansions_" + str(allocate_tu_expansions) + "__gamma_" + str(gamma) + "__minpf_" + str(min_pf) + "__tu_" + str(t_u) + "__r_" + str(r) + "__nexp_" + str(nexp) + "__fweight_" + str(fweight) + "__rtmultiplier_" + str(rt_multiplier) + "__tilmult_" + str(tilmult)
-	cmd_params = "--include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(rt_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp) 
+def add_dda_config(configurations, rep, allocate_tu_expansions=True, gamma=1, min_pf=0.001, t_u=100, r=100, nexp=100, fweight=-0.000001, rt_multiplier=1, tilmult=1, time_aware_heuristic=0):
+	name = 	"dda__r" + str(rep) + "__allocatetuexpansions_" + str(allocate_tu_expansions) + "__gamma_" + str(gamma) + "__minpf_" + str(min_pf) + "__tu_" + str(t_u) + "__r_" + str(r) + "__nexp_" + str(nexp) + "__fweight_" + str(fweight) + "__rtmultiplier_" + str(rt_multiplier) + "__tilmult_" + str(tilmult) + "__time_aware_heuristic_" + str(time_aware_heuristic)
+	cmd_params = "--include-metareasoning-time --multiply-TILs-by " + str(tilmult) + " --real-to-plan-time-multiplier " + str(rt_multiplier) + " --calculate-Q-interval " + str(r) + " --add-weighted-f-value-to-Q "  + str(fweight) + " --min-probability-failure " + str(min_pf) + "  --slack-from-heuristic  --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma " + str(gamma) + " --ijcai-t_u " + str(t_u) + " --icaps-for-n-expansions " + str(nexp)  + " --time-aware-heuristic " + str(time_aware_heuristic)
 	if allocate_tu_expansions:
 		cmd = planner + " --allocate-t_u-expansions " + cmd_params
 	else:
@@ -107,7 +107,8 @@ for rep in range(20):
 
 		configurations.append( ("icaps2018__r" + str(rep) + "__tilmult_" + str(tilmult),
 			planner + " --multiply-TILs-by " + str(tilmult) + " --forbid-self-overlapping-actions --deadline-aware-open-list Focal --slack-from-heuristic") )
-		add_dda_config(configurations, rep)
+		add_dda_config(configurations, rep, time_aware_heuristic=0)
+		add_dda_config(configurations, rep, time_aware_heuristic=1)
 
 #		add_dda_config(configurations, rep, allocate_tu_expansions=False)
 

@@ -66,7 +66,7 @@ def generate_instances():
 		domains[name].append((domain,problem))
 
 
-	for r in range(1,3):
+	for r in range(1,4):
 		name = "rcll-" + str(r) + "-robots"
 		for o in range(1,101):		
 			domain = "../pddl-instances/rcll/rcll_domain_production_durations_time_windows.pddl"
@@ -183,6 +183,7 @@ def get_planner_commandline(cfg, instance):
                     "--ijcai-gamma", str(cfg["gamma"]),
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
                     "--min-probability-failure", str(0.001),
+                    "--time-aware-heuristic", str(1),
                     domfile_by_probfile[instance], instance]
 
     return l
@@ -278,7 +279,7 @@ def train(instance_file):
 
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 3600*24*7,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*4,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": True,
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime
@@ -359,7 +360,7 @@ def testgen(tuned, eval, test_file, config_name, num_reps):
 def test(test_file, config_names):
 	# SMAC scenario object
 	scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternative to runtime)
-                     "wallclock-limit": 3600*72,  # max duration to run the optimization (in seconds)
+                     "wallclock-limit": 3600*4,  # max duration to run the optimization (in seconds)
                      "cs": cs,  # configuration space
                      "deterministic": True,
                      "limit_resources": True,  # Uses pynisher to limit memory and runtime

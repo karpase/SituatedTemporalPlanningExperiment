@@ -22,6 +22,8 @@ from multiprocessing import Pool
 logger = logging.getLogger("situated-temporal-planning-smac")
 logging.basicConfig(level=logging.INFO)
 
+cwd = os.getcwd()
+
 
 GAT_UNSOLVED = 2147483647.0
 
@@ -30,7 +32,7 @@ def generate_instances():
 
 	name = "airport-time-windows"
 	for x in range(1,51): 
-		domain = "../pddl-instances/ipc-2004/domains/airport-temporal-time-windows-strips/domains/domain-" + str(x) + ".pddl" 
+		domain = "../pddl-instances/ipc-2004/domains/airport-temporal-time-windows-strips/domains/domain-" + str(x) + ".pddl"
 		problem = "../pddl-instances/ipc-2004/domains/airport-temporal-time-windows-strips/instances/instance-" + str(x) + ".pddl"
 		domains[name].append((domain,problem))
 
@@ -162,16 +164,16 @@ generate_zipper_folds()
 
 def get_planner_commandline(cfg, instance):
     if cfg == "baseline":
-        l = ["../rewrite-no-lp", 
+        l = [os.path.join(cwd,"../rewrite-no-lp"), 
 		#"--real-to-plan-time-multiplier","10",
-		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+		"--forbid-self-overlapping-actions", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", os.path.join(cwd,domfile_by_probfile[instance]), os.path.join(cwd,instance)]
     elif cfg == "baseline-greedy":
-        l = ["../rewrite-no-lp", 
+        l = [os.path.join(cwd,"../rewrite-no-lp"), 
 		#"--real-to-plan-time-multiplier","10",
-		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", domfile_by_probfile[instance], instance]
+		"--forbid-self-overlapping-actions", "--g-weight", "0", "--deadline-aware-open-list", "Focal", "--slack-from-heuristic", os.path.join(cwd,domfile_by_probfile[instance]), os.path.join(cwd,instance)]
     else:   
 
-        l = ["../rewrite-no-lp", 
+        l = [os.path.join(cwd,"../rewrite-no-lp"), 
                     "--allocate-t_u-expansions",
                     "--include-metareasoning-time",
                     "--forbid-self-overlapping-actions",
@@ -184,7 +186,7 @@ def get_planner_commandline(cfg, instance):
                     "--icaps-for-n-expansions", str(cfg["nexp"]),
                     "--min-probability-failure", str(0.001),
                     "--time-aware-heuristic", str(1),
-                    domfile_by_probfile[instance], instance]
+                    os.path.join(cwd,domfile_by_probfile[instance]), os.path.join(cwd,instance)]
 
     return l
 
@@ -332,7 +334,7 @@ def read_config(filename):
 			c[varname] = varval
 	return c
 
-def testgen(tuned, eval, test_file, config_name, num_reps):
+def testgen(tuned, training_time, eval,  test_file, config_name, num_reps):
         configs = {}
         if config_name == "baseline":
             config = "baseline"
@@ -347,10 +349,10 @@ def testgen(tuned, eval, test_file, config_name, num_reps):
                 for config_name in configs:
                         l = get_planner_commandline(configs[config_name],line)
                         d = domname_by_probfile[line]
-                        i = domains[d].index( (domfile_by_probfile[line], line) )                        
+                        i = domains[d].index( (domfile_by_probfile[line], line) )
                         os.makedirs("res/" + d + "/" + str(i), exist_ok=True)
                         for ri in range(num_reps):
-                            cmdline = "(ulimit -t 200; " + " ".join(l) + " >&  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + ".log)"
+                            cmdline = " ".join(l) + "  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + "__traintime_" + training_time + ".log"
                             print(cmdline)
 
 
@@ -428,4 +430,4 @@ if __name__ == "__main__":
 	if sys.argv[1] == "test":
 		test( sys.argv[2], sys.argv[3:] )
 	if sys.argv[1] == "testgen":
-		testgen( sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], 20 )
+		testgen( sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], 20 )

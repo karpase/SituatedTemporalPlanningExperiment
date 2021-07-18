@@ -352,7 +352,7 @@ def testgen(tuned, training_time, eval,  test_file, config_name, num_reps):
                         i = domains[d].index( (domfile_by_probfile[line], line) )
                         os.makedirs("res/" + d + "/" + str(i), exist_ok=True)
                         for ri in range(num_reps):
-                            cmdline = " ".join(l) + "  res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + "__traintime_" + training_time + ".log"
+                            cmdline = " ".join(l) + "  " + os.path.join(cwd,"res/" + d + "/" + str(i) + "/dda__r" + str(ri) + "__tuned_" + tuned + "__eval_" + eval + "__traintime_" + training_time + ".log")
                             print(cmdline)
 
 

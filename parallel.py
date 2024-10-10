@@ -8,6 +8,7 @@ import os
 import argparse
 import resource
 import shlex
+import tempfile
 
 TIMEOUT = 200
 MEMLIMIT = 3 * 1024 * 1024 * 1024
@@ -29,7 +30,7 @@ def run_command(cmd):
 		try:
 			resource.setrlimit(resource.RLIMIT_AS, (args.memlimit, resource.RLIM_INFINITY))
 			resource.setrlimit(resource.RLIMIT_CPU, (args.timeout, resource.RLIM_INFINITY))
-			subprocess.call(torun, stdout=outfile, stderr=outfile)
+			subprocess.call(torun, cwd=tempfile.TemporaryDirectory(), stdout=outfile, stderr=outfile)
 #		except subprocess.TimeoutExpired:
 #			print('TIMEOUT DETECTED: subprocess')
 #			outfile.write("TIMEOUT")

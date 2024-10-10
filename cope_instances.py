@@ -96,10 +96,11 @@ default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-t
 
 def add_config(configurations, expansions_per_second, dispatch, dispatch_threshold=None):
 	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second)
+	name = "cope__eps_" + str(expansions_per_second)
 	if not dispatch:
-		name = "nodisp"
+		name = name + "__disp_false"
 	else:
-		name = "disp_" + str(dispatch_threshold)
+		name = name + "__disp_true__dispThreshold_" + str(dispatch_threshold)
 		cmd_params = cmd_params + " --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 	
 	cmd = planner + "  " + cmd_params

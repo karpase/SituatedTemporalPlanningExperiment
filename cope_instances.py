@@ -106,7 +106,7 @@ def add_config(configurations, expansions_per_second, dispatch, dispatch_thresho
 	cmd = planner + "  " + cmd_params
 	configurations.append( (name, cmd) )
 
-for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 100]:
+for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 	add_config(configurations, expansions_per_second, dispatch=False)		
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
 		add_config(configurations, expansions_per_second, dispatch=True, dispatch_threshold=dispatch_threshold)		

@@ -11,7 +11,7 @@ import shlex
 import tempfile
 
 TIMEOUT = 200
-MEMLIMIT = 3 * 1024 * 1024 * 1024
+MEMLIMIT = 8 * 1024 * 1024 * 1024
 NUM_PROCESSES = 1
 
 parser = argparse.ArgumentParser(description='Run processes in parallel')

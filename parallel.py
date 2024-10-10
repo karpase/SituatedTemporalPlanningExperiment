@@ -25,22 +25,23 @@ def run_command(cmd):
 	outfile_name = cmd_args[-1]
 	torun = cmd_args[:-1]
 	with open(outfile_name, "w") as outfile:
-		t1 = time.time()
-		print(cmd + "started " + str(t1))
-		try:
-			resource.setrlimit(resource.RLIMIT_AS, (args.memlimit, resource.RLIM_INFINITY))
-			resource.setrlimit(resource.RLIMIT_CPU, (args.timeout, resource.RLIM_INFINITY))
-			subprocess.call(torun, cwd=tempfile.TemporaryDirectory(), stdout=outfile, stderr=outfile)
-#		except subprocess.TimeoutExpired:
-#			print('TIMEOUT DETECTED: subprocess')
-#			outfile.write("TIMEOUT")
-		except Exception as exc:
-			print(cmd + 'CAUGHT EXCEPTION: ' + str(exc))
-			outfile.write('CAUGHT EXCEPTION: ' + str(exc))
-			raise(exc)
-		t2 = time.time()
-		print("ended "  + str(t2) + " --- took " + str(t2 - t1))
-		outfile.close()
+		with tempfile.TemporaryDirectory() as tmpd:
+			t1 = time.time()
+			print(cmd + "started " + str(t1))
+			try:
+				resource.setrlimit(resource.RLIMIT_AS, (args.memlimit, resource.RLIM_INFINITY))
+				resource.setrlimit(resource.RLIMIT_CPU, (args.timeout, resource.RLIM_INFINITY))
+				subprocess.call(torun, cwd=tmpd, stdout=outfile, stderr=outfile)
+	#		except subprocess.TimeoutExpired:
+	#			print('TIMEOUT DETECTED: subprocess')
+	#			outfile.write("TIMEOUT")
+			except Exception as exc:
+				print(cmd + 'CAUGHT EXCEPTION: ' + str(exc))
+				outfile.write('CAUGHT EXCEPTION: ' + str(exc))
+				raise(exc)
+			t2 = time.time()
+			print("ended "  + str(t2) + " --- took " + str(t2 - t1))
+			outfile.close()
 
 def read_and_execute(filename):
 	with open(filename, "r") as f:

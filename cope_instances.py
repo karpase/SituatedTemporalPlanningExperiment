@@ -72,13 +72,12 @@ for r in range(1,4):
 #		problem = "pddl-instances/rcll-fixed-dl/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 #		domains[name].append((domain,problem))
 
-name = "turtlebot4"
+name = "turtlebot"
 for y in range(1,9):
 	domain = "pddl-instances/turtlebot/bailout1/domain_turtlebot_bailout.pddl"
 	problem = "pddl-instances/turtlebot/bailout1/problem_turtlebot_4_bailout_" + str(y) + ".pddl"
 	domains[name].append((domain,problem))
 
-name = "turtlebot5"
 for y in range(1,7):
 	domain = "pddl-instances/turtlebot/bailout2/domain_turtlebot_bailout.pddl"
 	problem = "pddl-instances/turtlebot/bailout2/problem_turtlebot_5_bailout_" + str(y) + ".pddl"

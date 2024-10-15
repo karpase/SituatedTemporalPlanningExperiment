@@ -54,7 +54,7 @@ cwd = os.getcwd()
 for r in range(1,4):
 	name = "rcll-" + str(r) + "-robots"
 	for o in range(1,101):		
-		domain = "pddl-instances/rcll/rcll_domain_production_durations_time_windows.pddl"
+		domain = "pddl-instances/rcll/csdomain.pddl"
 		problem = "pddl-instances/rcll/problem-" + "{0:0=3d}".format(o) + "-r" + str(r) + "-o1-durations.pddl"
 		domains[name].append((domain,problem))
 

@@ -91,24 +91,39 @@ configurations = []
 
 
 
-default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --calculate-Q-interval 100 --add-weighted-f-value-to-Q -0.000001 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --deadline-aware-open-list IJCAI --ijcai-gamma 1 --ijcai-t_u 100 --icaps-for-n-expansions 100 --time-aware-heuristic 1"
+default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --calculate-Q-interval 100 --add-weighted-f-value-to-Q -0.000001 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --icaps-for-n-expansions 100 --time-aware-heuristic 1"
 
-def add_config(configurations, expansions_per_second, dispatch, dispatch_threshold=None):
+def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bool, dispatch_threshold=None, mcts_c=None):
 	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second)
-	name = "cope__eps_" + str(expansions_per_second)
+	name = "cope__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts)
+
+	if mcts:
+		cmd_params = cmd_params + " --deadline-aware-open-list MCTS"
+	else:
+		cmd_params = cmd_params + " --deadline-aware-open-list IJCAI"
+
 	if not dispatch:
 		name = name + "__disp_false"
+		if mcts:
+			cmd_params = cmd_params + " --mcts-C " + str(mcts_c) + " --mcts-sd-weight 0 --mcts-value-for-pruned disappear --mcts-configuration 'value=FinishProbability(0,now),aggregator=Mean'"
 	else:
 		name = name + "__disp_true__dispThreshold_" + str(dispatch_threshold)
-		cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
+		if mcts:
+			cmd_params = cmd_params + " --mcts-C " + str(mcts_c) + " --mcts-sd-weight 0 --mcts-value-for-pruned disappear --mcts-configuration 'value=[FinishProbability(0,now),FinishProbability(0,later)],aggregator=[Mean,Mean]' --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
+		else:			
+			cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 	
 	cmd = planner + "  " + cmd_params
 	configurations.append( (name, cmd) )
 
-for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
-	add_config(configurations, expansions_per_second, dispatch=False)		
+for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:		
+	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)		
+	for mcts_c in [0.001, 0.01, 0.1]:
+		add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
-		add_config(configurations, expansions_per_second, dispatch=True, dispatch_threshold=dispatch_threshold)		
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
+		for mcts_c in [0.001, 0.01, 0.1]:			
+			add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c)		
 	
 
 

@@ -118,13 +118,13 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 	configurations.append( (name, cmd) )
 
 for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:		
-	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)		
-	for mcts_c in [0.001, 0.01, 0.1]:
+	#add_config(configurations, expansions_per_second, dispatch=False, mcts=False)		
+	for mcts_c in [1, 1.41, 10]:
 		add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c)
-	for dispatch_threshold in [0.025, 0.1, 0.25]:
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
-	for dispatch_threshold in [0.0001, 0.001, 0.01]:
-		for mcts_c in [0.001, 0.01, 0.1]:
+	#for dispatch_threshold in [0.025, 0.1, 0.25]:
+	#	add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
+	for dispatch_threshold in [0.000001, 0.00001]:
+		for mcts_c in [1, 1.41, 10]:
 			add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c)		
 	
 

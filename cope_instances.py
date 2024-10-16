@@ -91,11 +91,11 @@ configurations = []
 
 
 
-default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --calculate-Q-interval 100 --add-weighted-f-value-to-Q -0.000001 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --icaps-for-n-expansions 100 --time-aware-heuristic 1"
+default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --add-weighted-f-value-to-Q -0.000001 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --time-aware-heuristic 1"
 
 def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bool, dispatch_threshold=None, mcts_c=None):
-	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second)
-	name = "cope__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts)
+	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second) + " --calculate-Q-interval " + str(expansions_per_second) + " --icaps-for-n-expansions " + str(expansions_per_second) + " "
+	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts)
 
 	if mcts:
 		cmd_params = cmd_params + " --deadline-aware-open-list MCTS"
@@ -123,7 +123,8 @@ for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 		add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
 		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
-		for mcts_c in [0.001, 0.01, 0.1]:			
+	for dispatch_threshold in [0.0001, 0.001, 0.01]:
+		for mcts_c in [0.001, 0.01, 0.1]:
 			add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c)		
 	
 

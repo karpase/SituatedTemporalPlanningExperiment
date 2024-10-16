@@ -99,6 +99,7 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 
 	if mcts:
 		cmd_params = cmd_params + " --deadline-aware-open-list MCTS"
+		name = name + "__c_" + str(mcts_c)
 	else:
 		cmd_params = cmd_params + " --deadline-aware-open-list IJCAI"
 

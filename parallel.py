@@ -10,7 +10,7 @@ import resource
 import shlex
 import tempfile
 
-TIMEOUT = 200
+TIMEOUT = 600
 MEMLIMIT = 8 * 1024 * 1024 * 1024
 NUM_PROCESSES = 1
 
@@ -22,8 +22,9 @@ parser.add_argument('--memlimit', type=int, dest='memlimit', default=MEMLIMIT, h
 
 def run_command(cmd):
 	cmd_args = shlex.split(cmd)
-	outfile_name = cmd_args[-1]
-	torun = cmd_args[:-1]
+	outfile_name = cmd_args[-2]
+	parser_cmd = cmd_args[-1]
+	torun = cmd_args[:-2]
 	with open(outfile_name, "w") as outfile:
 		with tempfile.TemporaryDirectory() as tmpd:
 			t1 = time.time()
@@ -32,6 +33,8 @@ def run_command(cmd):
 				resource.setrlimit(resource.RLIMIT_AS, (args.memlimit, resource.RLIM_INFINITY))
 				resource.setrlimit(resource.RLIMIT_CPU, (args.timeout, resource.RLIM_INFINITY))
 				subprocess.call(torun, cwd=tmpd, stdout=outfile, stderr=outfile)
+				with open(outfile_name + ".csv", "w") as outfile_csv:
+					subprocess.call([parser_cmd, outfile_name], cwd=tmpd, stdout=outfile_csv, stderr=outfile)
 	#		except subprocess.TimeoutExpired:
 	#			print('TIMEOUT DETECTED: subprocess')
 	#			outfile.write("TIMEOUT")

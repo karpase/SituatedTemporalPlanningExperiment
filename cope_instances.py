@@ -108,8 +108,9 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 		if mcts:
 			cmd_params = cmd_params + " --mcts-configuration 'value=FinishProbability(0,now),aggregator=" + mcts_fo + "'"
 	else:
-		name = name + "__so_" + mcts_so + "__disp_true__dispThreshold_" + str(dispatch_threshold)
+		name = name + "__disp_true__dispThreshold_" + str(dispatch_threshold)
 		if mcts:
+			name = name + "__so_" + mcts_so
 			cmd_params = cmd_params + " --mcts-configuration 'value=[FinishProbability(0,now),FinishProbability(0,later)],aggregator=[" + mcts_fo + "," + mcts_so + "]' --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 		else:			
 			cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)

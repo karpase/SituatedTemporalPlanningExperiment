@@ -32,9 +32,7 @@ def run_command(cmd):
 			try:
 				resource.setrlimit(resource.RLIMIT_AS, (args.memlimit, resource.RLIM_INFINITY))
 				resource.setrlimit(resource.RLIMIT_CPU, (args.timeout, resource.RLIM_INFINITY))
-				subprocess.call(torun, cwd=tmpd, stdout=outfile, stderr=outfile)
-				with open(outfile_name + ".csv", "w") as outfile_csv:
-					subprocess.call([parser_cmd, outfile_name], cwd=tmpd, stdout=outfile_csv, stderr=outfile)
+				subprocess.call(torun, cwd=tmpd, stdout=outfile, stderr=outfile)				
 	#		except subprocess.TimeoutExpired:
 	#			print('TIMEOUT DETECTED: subprocess')
 	#			outfile.write("TIMEOUT")
@@ -45,7 +43,10 @@ def run_command(cmd):
 			t2 = time.time()
 			print("ended "  + str(t2) + " --- took " + str(t2 - t1))
 			if t2 - t1 > args.timeout:
-				outfile.write("TIMEOUT")
+				outfile.write("\nTIMEOUT")
+			outfile.flush()
+			with open(outfile_name + ".csv", "w") as outfile_csv:
+					subprocess.call([parser_cmd, outfile_name], cwd=tmpd, stdout=outfile_csv, stderr=outfile)
 			outfile.close()
 
 def read_and_execute(filename):

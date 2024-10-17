@@ -10,7 +10,7 @@ import resource
 import shlex
 import tempfile
 
-TIMEOUT = 600
+TIMEOUT = 1800
 MEMLIMIT = 8 * 1024 * 1024 * 1024
 NUM_PROCESSES = 1
 

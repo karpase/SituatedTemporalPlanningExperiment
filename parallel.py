@@ -44,6 +44,8 @@ def run_command(cmd):
 				raise(exc)
 			t2 = time.time()
 			print("ended "  + str(t2) + " --- took " + str(t2 - t1))
+			if t2 - t1 > args.timeout:
+				outfile.write("TIMEOUT")
 			outfile.close()
 
 def read_and_execute(filename):

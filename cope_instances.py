@@ -124,17 +124,19 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 #for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 for expansions_per_second in [50, 100, 500]:
 	# Baselines
-	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
-	#for dispatch_threshold in [0.025, 0.1, 0.25]:
-	#	add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
+	#add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
+	for dispatch_threshold in [0.025, 0.1, 0.25]:
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
 
 	# MCTS
 	for mcts_fo in ['Mean', 'Max', 'PowerMean(4)']:
-		for mcts_c in [0, 0.1, 1]:
-			for mcts_random_walk_length in [0, 5]:
-				for mcts_best_open_list in [False, True]:
-					add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
-		# for dispatch_threshold in [0.001, 0.01, 0.1]:
+		for mcts_so in ['Mean', 'Max', 'PowerMean(4)']:
+			for mcts_c in [0, 0.1, 1]:
+				for mcts_random_walk_length in [0, 5]:
+					for mcts_best_open_list in [False, True]:
+						#add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
+						for dispatch_threshold in [0.001, 0.01, 0.1]:
+							add_config(configurations, expansions_per_second, dispatch=True, dispatch_threshold=dispatch_threshold, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_so=mcts_so, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
 		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Mean')		
 		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Max')		
 		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Max', mcts_so='Mean')		

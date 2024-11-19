@@ -3,7 +3,7 @@ from collections import defaultdict
 import sys
 
 data = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0)))
-filename = sys.argv[1]
+filename = "results.cope.csv"
 
 eps_vals = set()
 confs = set()
@@ -12,9 +12,9 @@ with open(filename, newline='') as csvfile:
     spamreader  = csv.reader(csvfile)
     for row in spamreader:
         dpc = row[0].split("/")
-        dom = dpc[1]
-        prob = int(dpc[2])
-        conf = dpc[3]
+        dom = dpc[-3]
+        prob = int(dpc[-2])
+        conf = dpc[-1]
         conf_args = conf.split("__")
         conf_args_dict = {}
         for arg in conf_args[1:]:

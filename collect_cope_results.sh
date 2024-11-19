@@ -1,3 +1,5 @@
 #!/bin/sh
 
-cat res/*/*/cope*.log.csv
+for x in res/*/*/*.log.csv; do
+    cat $x;
+done

@@ -93,9 +93,13 @@ configurations = []
 
 default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --add-weighted-f-value-to-Q -0.000001 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --time-aware-heuristic 1"
 
-def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bool, dispatch_threshold=None, mcts_c=None, mcts_fo='Mean', mcts_so='Mean', mcts_random_walk_length=0, mcts_best_open_list=False):
+def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bool, dispatch_threshold=None, mcts_c=None, mcts_fo='Mean', mcts_so='Mean', mcts_random_walk_length=0, mcts_best_open_list=False, q_alternation=False, subtree_focus_threshold=None):
 	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second) + " --calculate-Q-interval " + str(expansions_per_second) + " --icaps-for-n-expansions " + str(expansions_per_second) + " "
-	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts)
+	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts) 
+
+	if q_alternation:
+		name = name + "__Qalternation_" + str(q_alternation)
+		cmd_params = cmd_params + " --Q-alternation "
 
 	if mcts:
 		cmd_params = cmd_params + " --deadline-aware-open-list MCTS --mcts-C " + str(mcts_c) + " --mcts-sd-weight 0 --mcts-value-for-pruned disappear --random-walk-length-cap " + str(mcts_random_walk_length)
@@ -104,7 +108,7 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 			name = name + "__mcts_best_open_list"
 		name = name + "__c_" + str(mcts_c) + "__fo_" + mcts_fo + "__rw_" + str(mcts_random_walk_length)
 	else:
-		cmd_params = cmd_params + " --deadline-aware-open-list IJCAI"
+		cmd_params = cmd_params + " --deadline-aware-open-list IJCAI"		
 
 	if not dispatch:
 		name = name + "__disp_false"
@@ -116,7 +120,11 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 			name = name + "__so_" + mcts_so
 			cmd_params = cmd_params + " --mcts-configuration 'value=[FinishProbability(0,now),FinishProbability(0,later)],aggregator=[" + mcts_fo + "," + mcts_so + "]' --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 		else:			
-			cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
+			if subtree_focus_threshold is not None:
+				cmd_params = cmd_params + "__subtree_focus_threshold_" + str(subtree_focus_threshold)
+				cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(subtree_focus_threshold) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
+			else:
+				cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 	
 	cmd = planner + "  " + cmd_params
 	configurations.append( (name, cmd) )
@@ -124,23 +132,25 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 #for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 for expansions_per_second in [50, 100, 500]:
 	# Baselines
-	#add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
+	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
 		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True)		
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True, subtree_focus_threshold=1)		
 
-	# MCTS
-	for mcts_fo in ['Mean', 'Max', 'PowerMean(4)']:
-		for mcts_so in ['Mean', 'Max', 'PowerMean(4)']:
-			for mcts_c in [0, 0.1, 1]:
-				for mcts_random_walk_length in [0, 5]:
-					for mcts_best_open_list in [False, True]:
-						#add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
-						for dispatch_threshold in [0.001, 0.01, 0.1]:
-							add_config(configurations, expansions_per_second, dispatch=True, dispatch_threshold=dispatch_threshold, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_so=mcts_so, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
-		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Mean')		
-		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Max')		
-		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Max', mcts_so='Mean')		
-		# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Max', mcts_so='Max')		
+	# # MCTS
+	# for mcts_fo in ['Mean', 'Max', 'PowerMean(4)']:
+	# 	for mcts_so in ['Mean', 'Max', 'PowerMean(4)']:
+	# 		for mcts_c in [0, 0.1, 1]:
+	# 			for mcts_random_walk_length in [0, 5]:
+	# 				for mcts_best_open_list in [False, True]:
+	# 					#add_config(configurations, expansions_per_second, dispatch=False, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
+	# 					for dispatch_threshold in [0.001, 0.01, 0.1]:
+	# 						add_config(configurations, expansions_per_second, dispatch=True, dispatch_threshold=dispatch_threshold, mcts=True, mcts_c=mcts_c, mcts_fo=mcts_fo, mcts_so=mcts_so, mcts_random_walk_length=mcts_random_walk_length, mcts_best_open_list=mcts_best_open_list)
+	# 	# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Mean')		
+	# 	# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Mean', mcts_so='Max')		
+	# 	# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Max', mcts_so='Mean')		
+	# 	# 	add_config(configurations, expansions_per_second, dispatch=True, mcts=True, dispatch_threshold=dispatch_threshold, mcts_c=mcts_c, mcts_fo='Max', mcts_so='Max')		
 	
 
 

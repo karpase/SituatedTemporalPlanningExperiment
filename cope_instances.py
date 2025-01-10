@@ -121,7 +121,7 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 			cmd_params = cmd_params + " --mcts-configuration 'value=[FinishProbability(0,now),FinishProbability(0,later)],aggregator=[" + mcts_fo + "," + mcts_so + "]' --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 		else:			
 			if subtree_focus_threshold is not None:
-				cmd_params = cmd_params + "__subtree_focus_threshold_" + str(subtree_focus_threshold)
+				name = name + "__subtree_focus_threshold_" + str(subtree_focus_threshold)
 				cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(subtree_focus_threshold) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
 			else:
 				cmd_params = cmd_params + " --dispatch-frontier-size 10 --subtree-focus-threshold " + str(dispatch_threshold / 2) + " --optimistic-lst-for-dispatch-reasoning --use-dispatcher LPFThreshold --dispatch-threshold " + str(dispatch_threshold)
@@ -132,10 +132,10 @@ def add_config(configurations, expansions_per_second, dispatch : bool, mcts : bo
 #for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 for expansions_per_second in [50, 100, 500]:
 	# Baselines
-	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
+	#add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True)		
+		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)		
+		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True)		
 		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True, subtree_focus_threshold=1)		
 
 	# # MCTS

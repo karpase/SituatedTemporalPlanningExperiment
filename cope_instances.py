@@ -91,14 +91,18 @@ configurations = []
 
 
 
-default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --time-aware-heuristic 1 --allocate-t_u-expansions"
+default_cmd_params = "--include-metareasoning-time --multiply-TILs-by 1 --real-to-plan-time-multiplier 1 --min-probability-failure 0.001 --slack-from-heuristic --forbid-self-overlapping-actions --ijcai-gamma 1 --ijcai-t_u 100 --time-aware-heuristic 1"
 
 def add_config(configurations, expansions_per_second, dispatch : bool, 
 			   mcts : bool, dispatch_threshold=None, mcts_c=None, mcts_fo='Mean', mcts_so='Mean', mcts_random_walk_length=0, 
 			   mcts_best_open_list=False, q_alternation=False, subtree_focus_threshold=None,
-			   value_types=None, add_weighted_f_value_to_Q = "-0.00001"):
+			   value_types=None, add_weighted_f_value_to_Q = "-0.00001",
+			   allocate_tu_expansions = True):
 	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second) + " --calculate-Q-interval " + str(expansions_per_second) + " --icaps-for-n-expansions " + str(expansions_per_second) + " --add-weighted-f-value-to-Q " + str(add_weighted_f_value_to_Q) + " "
-	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts) + "__addweightedfvaluetoQ_" + add_weighted_f_value_to_Q.replace(",","-")
+	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts) + "__addweightedfvaluetoQ_" + add_weighted_f_value_to_Q.replace(",","-") + "__allocate_tu_expansions_" + str(allocate_tu_expansions)
+
+	if allocate_tu_expansions:
+		cmd_params = cmd_params + " --allocate-t_u-expansions"
 
 	if value_types is not None:
 		name = name + "__valuetypes_" + value_types.replace(",","-")
@@ -139,17 +143,17 @@ def add_config(configurations, expansions_per_second, dispatch : bool,
 for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 #for expansions_per_second in [50, 100, 500]:
 	# Baseline
-	add_config(configurations, expansions_per_second, dispatch=False, mcts=False)
+	add_config(configurations, expansions_per_second, dispatch=False, mcts=False, allocate_tu_expansions=False)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
 		# Baseline
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, allocate_tu_expansions=False)
 		# New
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q", add_weighted_f_value_to_Q="-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue,NegativeLPF", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,NegativeLPF", add_weighted_f_value_to_Q="-0.000001,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,Q", add_weighted_f_value_to_Q="-0.00001,-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q", add_weighted_f_value_to_Q="-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue,NegativeLPF", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,NegativeLPF", add_weighted_f_value_to_Q="-0.000001,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,Q", add_weighted_f_value_to_Q="-0.00001,-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
 		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True)		
 		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True, subtree_focus_threshold=1)		
 

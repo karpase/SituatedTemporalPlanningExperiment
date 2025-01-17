@@ -8,9 +8,35 @@ filename = "results.cope.csv"
 eps_vals = set()
 confs = set()
 
+config_name = {
+"mcts_False_addweightedfvaluetoQ_-0.00001_disp_false.log": "old_nodisp",
+"mcts_False_addweightedfvaluetoQ_-0.00001_disp_true_dispThreshold_0.025.log": "old_disp_0.025",
+"mcts_False_addweightedfvaluetoQ_-0.00001_disp_true_dispThreshold_0.1.log": "old_disp_0.1",
+"mcts_False_addweightedfvaluetoQ_-0.00001_disp_true_dispThreshold_0.25.log": "old_disp_0.25",
+"mcts_False_addweightedfvaluetoQ_-0.000001-0_valuetypes_Q-NegativeLPF_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "Q_LPF_0.025",
+"mcts_False_addweightedfvaluetoQ_-0.000001-0_valuetypes_Q-NegativeLPF_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "Q_LPF_0.1",
+"mcts_False_addweightedfvaluetoQ_-0.000001-0_valuetypes_Q-NegativeLPF_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "Q_LPF_0.25",
+"mcts_False_addweightedfvaluetoQ_-0.00001--0.00001_valuetypes_Q-Q_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "Q_Q_0.025",
+"mcts_False_addweightedfvaluetoQ_-0.00001--0.00001_valuetypes_Q-Q_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "Q_Q_0.1",
+"mcts_False_addweightedfvaluetoQ_-0.00001--0.00001_valuetypes_Q-Q_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "Q_Q_0.25",
+"mcts_False_addweightedfvaluetoQ_-0.00001_valuetypes_Q_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "Q_0.025",
+"mcts_False_addweightedfvaluetoQ_-0.00001_valuetypes_Q_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "Q_0.1",
+"mcts_False_addweightedfvaluetoQ_-0.00001_valuetypes_Q_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "Q_0.25",
+"mcts_False_addweightedfvaluetoQ_0-0_valuetypes_FValue-NegativeLPF_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "F_LPF_0.025",
+"mcts_False_addweightedfvaluetoQ_0-0_valuetypes_FValue-NegativeLPF_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "F_LPF_0.1",
+"mcts_False_addweightedfvaluetoQ_0-0_valuetypes_FValue-NegativeLPF_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "F_LPF_0.25",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_FValue_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "F_0.025",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_FValue_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "F_0.1",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_FValue_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "F_0.25",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_NegativeLPF_disp_true_dispThreshold_0.025_subtree_focus_threshold_1.log": "LPF_0.025",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_NegativeLPF_disp_true_dispThreshold_0.1_subtree_focus_threshold_1.log": "LPF_0.1",
+"mcts_False_addweightedfvaluetoQ_0_valuetypes_NegativeLPF_disp_true_dispThreshold_0.25_subtree_focus_threshold_1.log": "LPF_0.25"
+}
+
 with open(filename, newline='') as csvfile:
     spamreader  = csv.reader(csvfile)
     for row in spamreader:
+        #print(row)
         dpc = row[0].split("/")
         dom = dpc[-3]
         prob = int(dpc[-2])
@@ -40,7 +66,7 @@ print("")
 for dom in data.keys():
     print(dom)
     for conf in sorted(list(confs)):
-        print(conf, end="\t")
+        print(config_name.get(conf, conf), end="\t")
         for eps in sorted(list(eps_vals)):
             print(data[dom][eps][conf], end="\t")
         print("")

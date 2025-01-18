@@ -143,17 +143,21 @@ def add_config(configurations, expansions_per_second, dispatch : bool,
 for expansions_per_second in [10, 20, 50, 100, 200, 300, 500, 1000]:
 #for expansions_per_second in [50, 100, 500]:
 	# Baseline
-	add_config(configurations, expansions_per_second, dispatch=False, mcts=False, allocate_tu_expansions=False)
+	#add_config(configurations, expansions_per_second, dispatch=False, mcts=False, allocate_tu_expansions=False)
 	for dispatch_threshold in [0.025, 0.1, 0.25]:
 		# Baseline
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, allocate_tu_expansions=False)
+		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, allocate_tu_expansions=False)
 		# New
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q", add_weighted_f_value_to_Q="-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue,NegativeLPF", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,NegativeLPF", add_weighted_f_value_to_Q="-0.000001,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
-		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,Q", add_weighted_f_value_to_Q="-0.00001,-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF", add_weighted_f_value_to_Q="0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q", add_weighted_f_value_to_Q="-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="FValue,NegativeLPF", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,NegativeLPF", add_weighted_f_value_to_Q="-0.000001,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		# add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="Q,Q", add_weighted_f_value_to_Q="-0.00001,-0.00001", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+
+
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF,NegativeLPF", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
+		add_config(configurations, expansions_per_second, dispatch=True, mcts=False, value_types="NegativeLPF,FValue", add_weighted_f_value_to_Q="0,0", dispatch_threshold=dispatch_threshold, subtree_focus_threshold=1, allocate_tu_expansions=False)
 		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True)		
 		#add_config(configurations, expansions_per_second, dispatch=True, mcts=False, dispatch_threshold=dispatch_threshold, q_alternation=True, subtree_focus_threshold=1)		
 

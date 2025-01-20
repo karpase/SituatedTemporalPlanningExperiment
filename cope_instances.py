@@ -99,7 +99,7 @@ def add_config(configurations, expansions_per_second, dispatch : bool,
 			   value_types=None, add_weighted_f_value_to_Q = "-0.00001",
 			   allocate_tu_expansions = True, time_shift_second_value = False):
 	cmd_params = default_cmd_params + " --time-based-on-expansions-per-second " + str(expansions_per_second) + " --calculate-Q-interval " + str(expansions_per_second) + " --icaps-for-n-expansions " + str(expansions_per_second) + " --add-weighted-f-value-to-Q " + str(add_weighted_f_value_to_Q) + " "
-	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts) + "__addweightedfvaluetoQ_" + add_weighted_f_value_to_Q.replace(",","-") + "__allocate_tu_expansions_" + str(allocate_tu_expansions) +  + "__time_shift_second_value_" + str(time_shift_second_value)
+	name = "copeqrel__eps_" + str(expansions_per_second) + "__mcts_" + str(mcts) + "__addweightedfvaluetoQ_" + add_weighted_f_value_to_Q.replace(",","-") + "__allocate_tu_expansions_" + str(allocate_tu_expansions) +  "__time_shift_second_value_" + str(time_shift_second_value)
 
 	if allocate_tu_expansions:
 		cmd_params = cmd_params + " --allocate-t_u-expansions"

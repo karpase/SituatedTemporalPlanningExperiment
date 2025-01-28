@@ -105,7 +105,7 @@ def add_config(configurations, expansions_per_second, dispatch : bool,
 		cmd_params = cmd_params + " --allocate-t_u-expansions"
 
 	if time_shift_second_value:
-		cmd_params = cmd_params + " --time-shift-second-value"
+		cmd_params = cmd_params + " --time-shift-second-value NextInterestingTime"
 
 
 	if value_types is not None:
@@ -115,6 +115,8 @@ def add_config(configurations, expansions_per_second, dispatch : bool,
 	if q_alternation:
 		name = name + "__Qalternation_" + str(q_alternation)
 		cmd_params = cmd_params + " --Q-alternation "
+
+
 
 	if mcts:
 		cmd_params = cmd_params + " --deadline-aware-open-list MCTS --mcts-C " + str(mcts_c) + " --mcts-sd-weight 0 --mcts-value-for-pruned disappear --random-walk-length-cap " + str(mcts_random_walk_length)
